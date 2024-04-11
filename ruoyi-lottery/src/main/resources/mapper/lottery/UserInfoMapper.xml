@@ -35,27 +35,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
-        <include refid="selectUserInfoVo"/>
-        <where>  
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
-            <if test="balance != null "> and balance = #{balance}</if>
-            <if test="yebBalance != null "> and yeb_balance = #{yebBalance}</if>
-            <if test="yebInterest != null "> and yeb_interest = #{yebInterest}</if>
-            <if test="loginPwd != null  and loginPwd != ''"> and login_pwd = #{loginPwd}</if>
-            <if test="payPwd != null  and payPwd != ''"> and pay_pwd = #{payPwd}</if>
-            <if test="loginStatus != null "> and login_status = #{loginStatus}</if>
-            <if test="payStatus != null "> and pay_status = #{payStatus}</if>
-            <if test="userPhone != null  and userPhone != ''"> and user_phone = #{userPhone}</if>
-            <if test="userAgent != null  and userAgent != ''"> and user_agent = #{userAgent}</if>
-            <if test="referralCode != null  and referralCode != ''"> and referral_code = #{referralCode}</if>
-            <if test="avatarId != null "> and avatar_id = #{avatarId}</if>
-            <if test="levelId != null "> and level_id = #{levelId}</if>
-            <if test="groupId != null "> and group_id = #{groupId}</if>
-            <if test="lastTime != null "> and last_time = #{lastTime}</if>
-            <if test="lastIp != null  and lastIp != ''"> and last_ip = #{lastIp}</if>
-            <if test="registerIp != null  and registerIp != ''"> and register_ip = #{registerIp}</if>
+        select u.id, u.user_name, u.nick_name, u.real_name, u.balance, u.yeb_balance, u.yeb_interest, u.login_status, u.pay_status, u.user_phone, u.user_agent, u.referral_code, a.avatar_img as avatarImg, l.level_name as levelName, l.level_img as levelImg, g.group_name as groupName, u.last_time, u.last_ip, u.remark, u.register_ip
+        from t_user_info u
+        left join t_avatar a on u.avatar_id = a.id
+        left join t_level l on u.level_id = l.id
+        left join t_group g on u.group_id = g.id
+        <where>
+            <if test="userName != null  and userName != ''"> and u.user_name like concat('%', #{userName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="realName != null  and realName != ''"> and u.real_name like concat('%', #{realName}, '%')</if>
+            <if test="balance != null "> and u.balance = #{balance}</if>
+            <if test="yebBalance != null "> and u.yeb_balance = #{yebBalance}</if>
+            <if test="yebInterest != null "> and u.yeb_interest = #{yebInterest}</if>
+            <if test="loginPwd != null  and loginPwd != ''"> and u.login_pwd = #{loginPwd}</if>
+            <if test="payPwd != null  and payPwd != ''"> and u.pay_pwd = #{payPwd}</if>
+            <if test="loginStatus != null "> and u.login_status = #{loginStatus}</if>
+            <if test="payStatus != null "> and u.pay_status = #{payStatus}</if>
+            <if test="userPhone != null  and userPhone != ''"> and u.user_phone = #{userPhone}</if>
+            <if test="userAgent != null  and userAgent != ''"> and u.user_agent = #{userAgent}</if>
+            <if test="referralCode != null  and referralCode != ''"> and u.referral_code = #{referralCode}</if>
+            <if test="avatarId != null "> and u.avatar_id = #{avatarId}</if>
+            <if test="levelId != null "> and u.level_id = #{levelId}</if>
+            <if test="groupId != null "> and u.group_id = #{groupId}</if>
+            <if test="lastTime != null "> and u.last_time = #{lastTime}</if>
+            <if test="lastIp != null  and lastIp != ''"> and u.last_ip = #{lastIp}</if>
+            <if test="registerIp != null  and registerIp != ''"> and u.register_ip = #{registerIp}</if>
         </where>
     </select>
     

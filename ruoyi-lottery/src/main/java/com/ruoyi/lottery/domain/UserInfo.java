@@ -2,6 +2,8 @@ package com.ruoyi.lottery.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -50,19 +52,17 @@ public class UserInfo extends BaseEntity
     private BigDecimal yebInterest;
 
     /** 登录密码 */
-    @Excel(name = "登录密码")
     private String loginPwd;
 
     /** 支付密码 */
-    @Excel(name = "支付密码")
     private String payPwd;
 
     /** 状态(0:正常 1:停用) */
-    @Excel(name = "状态(0:正常 1:停用)")
+    @Excel(name = "状态", readConverterExp="0=正常,1=停用")
     private Long loginStatus;
 
     /** 支付状态(0:正常 1:停用) */
-    @Excel(name = "支付状态(0:正常 1:停用)")
+    @Excel(name = "支付状态", readConverterExp="0=正常,1=停用")
     private Long payStatus;
 
     /** 手机号 */
@@ -78,16 +78,27 @@ public class UserInfo extends BaseEntity
     private String referralCode;
 
     /** 用户头像ID */
-    @Excel(name = "用户头像ID")
     private Long avatarId;
 
+    @TableField(exist = false)
+    private String avatarImg;
+
     /** 等级ID */
-    @Excel(name = "等级ID")
     private Long levelId;
 
+    @Excel(name = "等级")
+    @TableField(exist = false)
+    private String levelName;
+
+    @TableField(exist = false)
+    private String levelImg;
+
     /** 分组ID */
-    @Excel(name = "分组ID")
     private Long groupId;
+
+    @Excel(name = "分组")
+    @TableField(exist = false)
+    private String groupName;
 
     /** 最后登录时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

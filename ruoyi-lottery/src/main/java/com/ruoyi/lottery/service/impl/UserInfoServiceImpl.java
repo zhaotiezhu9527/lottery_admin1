@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.UserInfoMapper;
@@ -20,6 +21,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 {
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询会员列表
@@ -42,7 +45,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     public List<UserInfo> selectUserInfoList(UserInfo userInfo)
     {
-        return userInfoMapper.selectUserInfoList(userInfo);
+        List<UserInfo> list = userInfoMapper.selectUserInfoList(userInfo);
+        //获取资源路径
+        String url = sysParamService.getParamByKey("resource_domain");
+        list.forEach(user -> user.setAvatarImg(url + user.getAvatarImg()));
+        return list;
     }
 
     /**

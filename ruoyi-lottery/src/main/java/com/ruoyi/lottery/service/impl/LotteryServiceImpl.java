@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.LotteryMapper;
@@ -20,6 +21,8 @@ public class LotteryServiceImpl extends ServiceImpl<LotteryMapper, Lottery> impl
 {
     @Autowired
     private LotteryMapper lotteryMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询彩种管理
@@ -42,7 +45,10 @@ public class LotteryServiceImpl extends ServiceImpl<LotteryMapper, Lottery> impl
     @Override
     public List<Lottery> selectLotteryList(Lottery lottery)
     {
-        return lotteryMapper.selectLotteryList(lottery);
+        List<Lottery> list = lotteryMapper.selectLotteryList(lottery);
+        String url = sysParamService.getParamByKey("resource_domain");
+        list.forEach(entity -> entity.setImg(url + entity.getImg()));
+        return list;
     }
 
     /**

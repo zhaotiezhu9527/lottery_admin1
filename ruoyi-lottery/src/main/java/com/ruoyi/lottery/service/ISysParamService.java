@@ -59,4 +59,6 @@ public interface ISysParamService extends IService<SysParam>
      * @return 结果
      */
     public int deleteSysParamById(Long id);
+
+    public String getParamByKey(String key);
 }

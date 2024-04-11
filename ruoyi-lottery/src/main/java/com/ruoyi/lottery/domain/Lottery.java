@@ -35,7 +35,7 @@ public class Lottery extends BaseEntity
     private String dayOpen;
 
     /** 0:启用 1:停用 */
-    @Excel(name = "0:启用 1:停用")
+    @Excel(name = "是否启用", readConverterExp = "o=启用,1=停用")
     private Long status;
 
     /** 彩种图标 */
@@ -51,7 +51,7 @@ public class Lottery extends BaseEntity
     private Long pxh;
 
     /** 1:快3 2:时时彩 3:PK10 4:六合彩 5:PC蛋蛋 6:11选5 7:福彩3D 8:快乐8 */
-    @Excel(name = "1:快3 2:时时彩 3:PK10 4:六合彩 5:PC蛋蛋 6:11选5 7:福彩3D 8:快乐8")
+    @Excel(name = "彩票类型", readConverterExp = "1=快3,2=时时彩,3=PK10,4=六合彩,5=PC蛋蛋,6=11选5,7=福彩3D,8=快乐8")
     private Long lotteryType;
 
     /** 一天多少期 */

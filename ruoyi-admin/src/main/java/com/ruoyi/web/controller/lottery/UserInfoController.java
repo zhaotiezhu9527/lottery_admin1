@@ -72,13 +72,13 @@ public class UserInfoController extends BaseController
     /**
      * 新增会员列表
      */
-    @PreAuthorize("@ss.hasPermi('lottery:userInfo:add')")
-    @Log(title = "会员列表", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody UserInfo userInfo)
-    {
-        return toAjax(userInfoService.insertUserInfo(userInfo));
-    }
+//    @PreAuthorize("@ss.hasPermi('lottery:userInfo:add')")
+//    @Log(title = "会员列表", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody UserInfo userInfo)
+//    {
+//        return toAjax(userInfoService.insertUserInfo(userInfo));
+//    }
 
     /**
      * 修改会员列表
@@ -94,11 +94,11 @@ public class UserInfoController extends BaseController
     /**
      * 删除会员列表
      */
-    @PreAuthorize("@ss.hasPermi('lottery:userInfo:remove')")
-    @Log(title = "会员列表", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(userInfoService.deleteUserInfoByIds(ids));
-    }
+//    @PreAuthorize("@ss.hasPermi('lottery:userInfo:remove')")
+//    @Log(title = "会员列表", businessType = BusinessType.DELETE)
+//	@DeleteMapping("/{ids}")
+//    public AjaxResult remove(@PathVariable Long[] ids)
+//    {
+//        return toAjax(userInfoService.deleteUserInfoByIds(ids));
+//    }
 }
