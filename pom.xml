@@ -32,6 +32,7 @@
         <mybatisplus.version>3.5.3.1</mybatisplus.version>
         <dynamicdatasource.version>3.5.2</dynamicdatasource.version>
         <hutool.version>5.8.26</hutool.version>
+        <xfile.version>2.1.0</xfile.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -129,6 +130,13 @@
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.dromara.x-file-storage</groupId>
+                <artifactId>x-file-storage-spring</artifactId>
+                <version>${xfile.version}</version>
+            </dependency>
+
 
             <!-- 定时任务-->
             <dependency>
