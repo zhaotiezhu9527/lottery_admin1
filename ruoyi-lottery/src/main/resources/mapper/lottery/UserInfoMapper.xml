@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.UserInfoMapper">
+    
+    <resultMap type="UserInfo" id="UserInfoResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="realName"    column="real_name"    />
+        <result property="balance"    column="balance"    />
+        <result property="yebBalance"    column="yeb_balance"    />
+        <result property="yebInterest"    column="yeb_interest"    />
+        <result property="loginPwd"    column="login_pwd"    />
+        <result property="payPwd"    column="pay_pwd"    />
+        <result property="loginStatus"    column="login_status"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="userAgent"    column="user_agent"    />
+        <result property="referralCode"    column="referral_code"    />
+        <result property="avatarId"    column="avatar_id"    />
+        <result property="levelId"    column="level_id"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="lastTime"    column="last_time"    />
+        <result property="lastIp"    column="last_ip"    />
+        <result property="remark"    column="remark"    />
+        <result property="registerIp"    column="register_ip"    />
+    </resultMap>
+
+    <sql id="selectUserInfoVo">
+        select id, user_name, nick_name, real_name, balance, yeb_balance, yeb_interest, login_pwd, pay_pwd, login_status, pay_status, user_phone, user_agent, referral_code, avatar_id, level_id, group_id, create_time, update_time, last_time, last_ip, remark, register_ip from t_user_info
+    </sql>
+
+    <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="balance != null "> and balance = #{balance}</if>
+            <if test="yebBalance != null "> and yeb_balance = #{yebBalance}</if>
+            <if test="yebInterest != null "> and yeb_interest = #{yebInterest}</if>
+            <if test="loginPwd != null  and loginPwd != ''"> and login_pwd = #{loginPwd}</if>
+            <if test="payPwd != null  and payPwd != ''"> and pay_pwd = #{payPwd}</if>
+            <if test="loginStatus != null "> and login_status = #{loginStatus}</if>
+            <if test="payStatus != null "> and pay_status = #{payStatus}</if>
+            <if test="userPhone != null  and userPhone != ''"> and user_phone = #{userPhone}</if>
+            <if test="userAgent != null  and userAgent != ''"> and user_agent = #{userAgent}</if>
+            <if test="referralCode != null  and referralCode != ''"> and referral_code = #{referralCode}</if>
+            <if test="avatarId != null "> and avatar_id = #{avatarId}</if>
+            <if test="levelId != null "> and level_id = #{levelId}</if>
+            <if test="groupId != null "> and group_id = #{groupId}</if>
+            <if test="lastTime != null "> and last_time = #{lastTime}</if>
+            <if test="lastIp != null  and lastIp != ''"> and last_ip = #{lastIp}</if>
+            <if test="registerIp != null  and registerIp != ''"> and register_ip = #{registerIp}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserInfoById" parameterType="Long" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserInfo" parameterType="UserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="balance != null">balance,</if>
+            <if test="yebBalance != null">yeb_balance,</if>
+            <if test="yebInterest != null">yeb_interest,</if>
+            <if test="loginPwd != null and loginPwd != ''">login_pwd,</if>
+            <if test="payPwd != null">pay_pwd,</if>
+            <if test="loginStatus != null">login_status,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="userPhone != null">user_phone,</if>
+            <if test="userAgent != null">user_agent,</if>
+            <if test="referralCode != null">referral_code,</if>
+            <if test="avatarId != null">avatar_id,</if>
+            <if test="levelId != null">level_id,</if>
+            <if test="groupId != null">group_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="lastTime != null">last_time,</if>
+            <if test="lastIp != null">last_ip,</if>
+            <if test="remark != null">remark,</if>
+            <if test="registerIp != null">register_ip,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="yebBalance != null">#{yebBalance},</if>
+            <if test="yebInterest != null">#{yebInterest},</if>
+            <if test="loginPwd != null and loginPwd != ''">#{loginPwd},</if>
+            <if test="payPwd != null">#{payPwd},</if>
+            <if test="loginStatus != null">#{loginStatus},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="userPhone != null">#{userPhone},</if>
+            <if test="userAgent != null">#{userAgent},</if>
+            <if test="referralCode != null">#{referralCode},</if>
+            <if test="avatarId != null">#{avatarId},</if>
+            <if test="levelId != null">#{levelId},</if>
+            <if test="groupId != null">#{groupId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="lastTime != null">#{lastTime},</if>
+            <if test="lastIp != null">#{lastIp},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="registerIp != null">#{registerIp},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserInfo" parameterType="UserInfo">
+        update t_user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="yebBalance != null">yeb_balance = #{yebBalance},</if>
+            <if test="yebInterest != null">yeb_interest = #{yebInterest},</if>
+            <if test="loginPwd != null and loginPwd != ''">login_pwd = #{loginPwd},</if>
+            <if test="payPwd != null">pay_pwd = #{payPwd},</if>
+            <if test="loginStatus != null">login_status = #{loginStatus},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="userPhone != null">user_phone = #{userPhone},</if>
+            <if test="userAgent != null">user_agent = #{userAgent},</if>
+            <if test="referralCode != null">referral_code = #{referralCode},</if>
+            <if test="avatarId != null">avatar_id = #{avatarId},</if>
+            <if test="levelId != null">level_id = #{levelId},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="lastTime != null">last_time = #{lastTime},</if>
+            <if test="lastIp != null">last_ip = #{lastIp},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="registerIp != null">register_ip = #{registerIp},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserInfoById" parameterType="Long">
+        delete from t_user_info where id = #{id}
+    </delete>
+
+    <delete id="deleteUserInfoByIds" parameterType="String">
+        delete from t_user_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
