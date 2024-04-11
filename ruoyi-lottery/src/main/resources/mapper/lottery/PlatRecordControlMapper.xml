@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.PlatRecordControlMapper">
+    
+    <resultMap type="PlatRecordControl" id="PlatRecordControlResult">
+        <result property="id"    column="id"    />
+        <result property="platCode"    column="plat_code"    />
+        <result property="platName"    column="plat_name"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPlatRecordControlVo">
+        select id, plat_code, plat_name, begin_time, end_time, status from t_plat_record_control
+    </sql>
+
+    <select id="selectPlatRecordControlList" parameterType="PlatRecordControl" resultMap="PlatRecordControlResult">
+        <include refid="selectPlatRecordControlVo"/>
+        <where>  
+            <if test="platCode != null  and platCode != ''"> and plat_code = #{platCode}</if>
+            <if test="platName != null  and platName != ''"> and plat_name like concat('%', #{platName}, '%')</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPlatRecordControlById" parameterType="Long" resultMap="PlatRecordControlResult">
+        <include refid="selectPlatRecordControlVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPlatRecordControl" parameterType="PlatRecordControl" useGeneratedKeys="true" keyProperty="id">
+        insert into t_plat_record_control
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platCode != null">plat_code,</if>
+            <if test="platName != null">plat_name,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platCode != null">#{platCode},</if>
+            <if test="platName != null">#{platName},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatRecordControl" parameterType="PlatRecordControl">
+        update t_plat_record_control
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platCode != null">plat_code = #{platCode},</if>
+            <if test="platName != null">plat_name = #{platName},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatRecordControlById" parameterType="Long">
+        delete from t_plat_record_control where id = #{id}
+    </delete>
+
+    <delete id="deletePlatRecordControlByIds" parameterType="String">
+        delete from t_plat_record_control where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

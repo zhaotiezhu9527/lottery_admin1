@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.WithdrawMapper">
+    
+    <resultMap type="Withdraw" id="WithdrawResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="amount"    column="amount"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="accountDetail"    column="account_detail"    />
+    </resultMap>
+
+    <sql id="selectWithdrawVo">
+        select id, user_name, order_no, amount, create_time, check_time, status, remark, oper_name, update_time, account_type, account_detail from t_withdraw
+    </sql>
+
+    <select id="selectWithdrawList" parameterType="Withdraw" resultMap="WithdrawResult">
+        <include refid="selectWithdrawVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="operName != null  and operName != ''"> and oper_name like concat('%', #{operName}, '%')</if>
+            <if test="accountType != null "> and account_type = #{accountType}</if>
+            <if test="accountDetail != null  and accountDetail != ''"> and account_detail = #{accountDetail}</if>
+        </where>
+    </select>
+    
+    <select id="selectWithdrawById" parameterType="Long" resultMap="WithdrawResult">
+        <include refid="selectWithdrawVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWithdraw" parameterType="Withdraw" useGeneratedKeys="true" keyProperty="id">
+        insert into t_withdraw
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="amount != null">amount,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="operName != null">oper_name,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="accountType != null">account_type,</if>
+            <if test="accountDetail != null">account_detail,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="operName != null">#{operName},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="accountType != null">#{accountType},</if>
+            <if test="accountDetail != null">#{accountDetail},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWithdraw" parameterType="Withdraw">
+        update t_withdraw
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="operName != null">oper_name = #{operName},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="accountType != null">account_type = #{accountType},</if>
+            <if test="accountDetail != null">account_detail = #{accountDetail},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWithdrawById" parameterType="Long">
+        delete from t_withdraw where id = #{id}
+    </delete>
+
+    <delete id="deleteWithdrawByIds" parameterType="String">
+        delete from t_withdraw where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.PayOrderMapper">
+    
+    <resultMap type="PayOrder" id="PayOrderResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="payOrderNo"    column="pay_order_no"    />
+        <result property="amount"    column="amount"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="errorMsg"    column="error_msg"    />
+        <result property="merchantCode"    column="merchant_code"    />
+        <result property="channelCode"    column="channel_code"    />
+        <result property="merchantName"    column="merchant_name"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="sign"    column="sign"    />
+    </resultMap>
+
+    <sql id="selectPayOrderVo">
+        select id, user_name, order_no, pay_order_no, amount, create_time, update_time, status, remark, error_msg, merchant_code, channel_code, merchant_name, channel_name, sign from t_pay_order
+    </sql>
+
+    <select id="selectPayOrderList" parameterType="PayOrder" resultMap="PayOrderResult">
+        <include refid="selectPayOrderVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="payOrderNo != null  and payOrderNo != ''"> and pay_order_no = #{payOrderNo}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="errorMsg != null  and errorMsg != ''"> and error_msg = #{errorMsg}</if>
+            <if test="merchantCode != null  and merchantCode != ''"> and merchant_code = #{merchantCode}</if>
+            <if test="channelCode != null  and channelCode != ''"> and channel_code = #{channelCode}</if>
+            <if test="merchantName != null  and merchantName != ''"> and merchant_name like concat('%', #{merchantName}, '%')</if>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="sign != null  and sign != ''"> and sign = #{sign}</if>
+        </where>
+    </select>
+    
+    <select id="selectPayOrderById" parameterType="Long" resultMap="PayOrderResult">
+        <include refid="selectPayOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPayOrder" parameterType="PayOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into t_pay_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="orderNo != null and orderNo != ''">order_no,</if>
+            <if test="payOrderNo != null">pay_order_no,</if>
+            <if test="amount != null">amount,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="errorMsg != null">error_msg,</if>
+            <if test="merchantCode != null">merchant_code,</if>
+            <if test="channelCode != null">channel_code,</if>
+            <if test="merchantName != null">merchant_name,</if>
+            <if test="channelName != null">channel_name,</if>
+            <if test="sign != null">sign,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+            <if test="payOrderNo != null">#{payOrderNo},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="errorMsg != null">#{errorMsg},</if>
+            <if test="merchantCode != null">#{merchantCode},</if>
+            <if test="channelCode != null">#{channelCode},</if>
+            <if test="merchantName != null">#{merchantName},</if>
+            <if test="channelName != null">#{channelName},</if>
+            <if test="sign != null">#{sign},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayOrder" parameterType="PayOrder">
+        update t_pay_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="orderNo != null and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="payOrderNo != null">pay_order_no = #{payOrderNo},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="errorMsg != null">error_msg = #{errorMsg},</if>
+            <if test="merchantCode != null">merchant_code = #{merchantCode},</if>
+            <if test="channelCode != null">channel_code = #{channelCode},</if>
+            <if test="merchantName != null">merchant_name = #{merchantName},</if>
+            <if test="channelName != null">channel_name = #{channelName},</if>
+            <if test="sign != null">sign = #{sign},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayOrderById" parameterType="Long">
+        delete from t_pay_order where id = #{id}
+    </delete>
+
+    <delete id="deletePayOrderByIds" parameterType="String">
+        delete from t_pay_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

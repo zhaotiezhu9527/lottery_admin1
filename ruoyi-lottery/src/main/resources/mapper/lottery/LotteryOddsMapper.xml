@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.LotteryOddsMapper">
+    
+    <resultMap type="LotteryOdds" id="LotteryOddsResult">
+        <result property="id"    column="id"    />
+        <result property="hmCode"    column="hm_code"    />
+        <result property="hmName"    column="hm_name"    />
+        <result property="odds"    column="odds"    />
+        <result property="status"    column="status"    />
+        <result property="lotteryCode"    column="lottery_code"    />
+        <result property="handicapCode"    column="handicap_code"    />
+        <result property="handicapName"    column="handicap_name"    />
+        <result property="playCode"    column="play_code"    />
+        <result property="playName"    column="play_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="pxh"    column="pxh"    />
+        <result property="groupName"    column="group_name"    />
+    </resultMap>
+
+    <sql id="selectLotteryOddsVo">
+        select id, hm_code, hm_name, odds, status, lottery_code, handicap_code, handicap_name, play_code, play_name, create_time, update_time, pxh, group_name from t_lottery_odds
+    </sql>
+
+    <select id="selectLotteryOddsList" parameterType="LotteryOdds" resultMap="LotteryOddsResult">
+        <include refid="selectLotteryOddsVo"/>
+        <where>  
+            <if test="hmCode != null  and hmCode != ''"> and hm_code = #{hmCode}</if>
+            <if test="hmName != null  and hmName != ''"> and hm_name like concat('%', #{hmName}, '%')</if>
+            <if test="odds != null "> and odds = #{odds}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="lotteryCode != null  and lotteryCode != ''"> and lottery_code = #{lotteryCode}</if>
+            <if test="handicapCode != null  and handicapCode != ''"> and handicap_code = #{handicapCode}</if>
+            <if test="handicapName != null  and handicapName != ''"> and handicap_name like concat('%', #{handicapName}, '%')</if>
+            <if test="playCode != null  and playCode != ''"> and play_code = #{playCode}</if>
+            <if test="playName != null  and playName != ''"> and play_name like concat('%', #{playName}, '%')</if>
+            <if test="pxh != null "> and pxh = #{pxh}</if>
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectLotteryOddsById" parameterType="Long" resultMap="LotteryOddsResult">
+        <include refid="selectLotteryOddsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLotteryOdds" parameterType="LotteryOdds" useGeneratedKeys="true" keyProperty="id">
+        insert into t_lottery_odds
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hmCode != null and hmCode != ''">hm_code,</if>
+            <if test="hmName != null">hm_name,</if>
+            <if test="odds != null">odds,</if>
+            <if test="status != null">status,</if>
+            <if test="lotteryCode != null">lottery_code,</if>
+            <if test="handicapCode != null">handicap_code,</if>
+            <if test="handicapName != null">handicap_name,</if>
+            <if test="playCode != null">play_code,</if>
+            <if test="playName != null">play_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="pxh != null">pxh,</if>
+            <if test="groupName != null">group_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hmCode != null and hmCode != ''">#{hmCode},</if>
+            <if test="hmName != null">#{hmName},</if>
+            <if test="odds != null">#{odds},</if>
+            <if test="status != null">#{status},</if>
+            <if test="lotteryCode != null">#{lotteryCode},</if>
+            <if test="handicapCode != null">#{handicapCode},</if>
+            <if test="handicapName != null">#{handicapName},</if>
+            <if test="playCode != null">#{playCode},</if>
+            <if test="playName != null">#{playName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="pxh != null">#{pxh},</if>
+            <if test="groupName != null">#{groupName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLotteryOdds" parameterType="LotteryOdds">
+        update t_lottery_odds
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hmCode != null and hmCode != ''">hm_code = #{hmCode},</if>
+            <if test="hmName != null">hm_name = #{hmName},</if>
+            <if test="odds != null">odds = #{odds},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="lotteryCode != null">lottery_code = #{lotteryCode},</if>
+            <if test="handicapCode != null">handicap_code = #{handicapCode},</if>
+            <if test="handicapName != null">handicap_name = #{handicapName},</if>
+            <if test="playCode != null">play_code = #{playCode},</if>
+            <if test="playName != null">play_name = #{playName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="pxh != null">pxh = #{pxh},</if>
+            <if test="groupName != null">group_name = #{groupName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryOddsById" parameterType="Long">
+        delete from t_lottery_odds where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryOddsByIds" parameterType="String">
+        delete from t_lottery_odds where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.LotteryOrderMapper">
+    
+    <resultMap type="LotteryOrder" id="LotteryOrderResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="lotteryCode"    column="lottery_code"    />
+        <result property="lotteryName"    column="lottery_name"    />
+        <result property="handicapCode"    column="handicap_code"    />
+        <result property="playCode"    column="play_code"    />
+        <result property="playName"    column="play_name"    />
+        <result property="betContent"    column="bet_content"    />
+        <result property="odds"    column="odds"    />
+        <result property="qs"    column="qs"    />
+        <result property="betAmount"    column="bet_amount"    />
+        <result property="bonusAmount"    column="bonus_amount"    />
+        <result property="profitAmount"    column="profit_amount"    />
+        <result property="betTime"    column="bet_time"    />
+        <result property="settleTime"    column="settle_time"    />
+        <result property="settleStatus"    column="settle_status"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="openResult"    column="open_result"    />
+        <result property="openResultTime"    column="open_result_time"    />
+        <result property="settleGroup"    column="settle_group"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLotteryOrderVo">
+        select id, user_name, order_no, lottery_code, lottery_name, handicap_code, play_code, play_name, bet_content, odds, qs, bet_amount, bonus_amount, profit_amount, bet_time, settle_time, settle_status, order_status, open_result, open_result_time, settle_group, update_time from t_lottery_order
+    </sql>
+
+    <select id="selectLotteryOrderList" parameterType="LotteryOrder" resultMap="LotteryOrderResult">
+        <include refid="selectLotteryOrderVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="lotteryCode != null  and lotteryCode != ''"> and lottery_code = #{lotteryCode}</if>
+            <if test="lotteryName != null  and lotteryName != ''"> and lottery_name like concat('%', #{lotteryName}, '%')</if>
+            <if test="handicapCode != null  and handicapCode != ''"> and handicap_code = #{handicapCode}</if>
+            <if test="playCode != null  and playCode != ''"> and play_code = #{playCode}</if>
+            <if test="playName != null  and playName != ''"> and play_name like concat('%', #{playName}, '%')</if>
+            <if test="betContent != null  and betContent != ''"> and bet_content = #{betContent}</if>
+            <if test="odds != null "> and odds = #{odds}</if>
+            <if test="qs != null  and qs != ''"> and qs = #{qs}</if>
+            <if test="betAmount != null "> and bet_amount = #{betAmount}</if>
+            <if test="bonusAmount != null "> and bonus_amount = #{bonusAmount}</if>
+            <if test="profitAmount != null "> and profit_amount = #{profitAmount}</if>
+            <if test="betTime != null "> and bet_time = #{betTime}</if>
+            <if test="settleTime != null "> and settle_time = #{settleTime}</if>
+            <if test="settleStatus != null "> and settle_status = #{settleStatus}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="openResult != null  and openResult != ''"> and open_result = #{openResult}</if>
+            <if test="openResultTime != null "> and open_result_time = #{openResultTime}</if>
+            <if test="settleGroup != null "> and settle_group = #{settleGroup}</if>
+        </where>
+    </select>
+    
+    <select id="selectLotteryOrderById" parameterType="Long" resultMap="LotteryOrderResult">
+        <include refid="selectLotteryOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLotteryOrder" parameterType="LotteryOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into t_lottery_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="orderNo != null and orderNo != ''">order_no,</if>
+            <if test="lotteryCode != null">lottery_code,</if>
+            <if test="lotteryName != null">lottery_name,</if>
+            <if test="handicapCode != null">handicap_code,</if>
+            <if test="playCode != null">play_code,</if>
+            <if test="playName != null">play_name,</if>
+            <if test="betContent != null">bet_content,</if>
+            <if test="odds != null">odds,</if>
+            <if test="qs != null">qs,</if>
+            <if test="betAmount != null">bet_amount,</if>
+            <if test="bonusAmount != null">bonus_amount,</if>
+            <if test="profitAmount != null">profit_amount,</if>
+            <if test="betTime != null">bet_time,</if>
+            <if test="settleTime != null">settle_time,</if>
+            <if test="settleStatus != null">settle_status,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="openResult != null">open_result,</if>
+            <if test="openResultTime != null">open_result_time,</if>
+            <if test="settleGroup != null">settle_group,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+            <if test="lotteryCode != null">#{lotteryCode},</if>
+            <if test="lotteryName != null">#{lotteryName},</if>
+            <if test="handicapCode != null">#{handicapCode},</if>
+            <if test="playCode != null">#{playCode},</if>
+            <if test="playName != null">#{playName},</if>
+            <if test="betContent != null">#{betContent},</if>
+            <if test="odds != null">#{odds},</if>
+            <if test="qs != null">#{qs},</if>
+            <if test="betAmount != null">#{betAmount},</if>
+            <if test="bonusAmount != null">#{bonusAmount},</if>
+            <if test="profitAmount != null">#{profitAmount},</if>
+            <if test="betTime != null">#{betTime},</if>
+            <if test="settleTime != null">#{settleTime},</if>
+            <if test="settleStatus != null">#{settleStatus},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="openResult != null">#{openResult},</if>
+            <if test="openResultTime != null">#{openResultTime},</if>
+            <if test="settleGroup != null">#{settleGroup},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLotteryOrder" parameterType="LotteryOrder">
+        update t_lottery_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="orderNo != null and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="lotteryCode != null">lottery_code = #{lotteryCode},</if>
+            <if test="lotteryName != null">lottery_name = #{lotteryName},</if>
+            <if test="handicapCode != null">handicap_code = #{handicapCode},</if>
+            <if test="playCode != null">play_code = #{playCode},</if>
+            <if test="playName != null">play_name = #{playName},</if>
+            <if test="betContent != null">bet_content = #{betContent},</if>
+            <if test="odds != null">odds = #{odds},</if>
+            <if test="qs != null">qs = #{qs},</if>
+            <if test="betAmount != null">bet_amount = #{betAmount},</if>
+            <if test="bonusAmount != null">bonus_amount = #{bonusAmount},</if>
+            <if test="profitAmount != null">profit_amount = #{profitAmount},</if>
+            <if test="betTime != null">bet_time = #{betTime},</if>
+            <if test="settleTime != null">settle_time = #{settleTime},</if>
+            <if test="settleStatus != null">settle_status = #{settleStatus},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="openResult != null">open_result = #{openResult},</if>
+            <if test="openResultTime != null">open_result_time = #{openResultTime},</if>
+            <if test="settleGroup != null">settle_group = #{settleGroup},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryOrderById" parameterType="Long">
+        delete from t_lottery_order where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryOrderByIds" parameterType="String">
+        delete from t_lottery_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.UserAccountMapper">
+    
+    <resultMap type="UserAccount" id="UserAccountResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="accountNo"    column="account_no"    />
+        <result property="address"    column="address"    />
+        <result property="realName"    column="real_name"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectUserAccountVo">
+        select id, user_name, account_type, channel_name, account_no, address, real_name, create_time from t_user_account
+    </sql>
+
+    <select id="selectUserAccountList" parameterType="UserAccount" resultMap="UserAccountResult">
+        <include refid="selectUserAccountVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="accountType != null "> and account_type = #{accountType}</if>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="accountNo != null  and accountNo != ''"> and account_no = #{accountNo}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectUserAccountById" parameterType="Long" resultMap="UserAccountResult">
+        <include refid="selectUserAccountVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserAccount" parameterType="UserAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="accountType != null">account_type,</if>
+            <if test="channelName != null">channel_name,</if>
+            <if test="accountNo != null">account_no,</if>
+            <if test="address != null">address,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="accountType != null">#{accountType},</if>
+            <if test="channelName != null">#{channelName},</if>
+            <if test="accountNo != null">#{accountNo},</if>
+            <if test="address != null">#{address},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserAccount" parameterType="UserAccount">
+        update t_user_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="accountType != null">account_type = #{accountType},</if>
+            <if test="channelName != null">channel_name = #{channelName},</if>
+            <if test="accountNo != null">account_no = #{accountNo},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserAccountById" parameterType="Long">
+        delete from t_user_account where id = #{id}
+    </delete>
+
+    <delete id="deleteUserAccountByIds" parameterType="String">
+        delete from t_user_account where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.SysParamMapper">
+    
+    <resultMap type="SysParam" id="SysParamResult">
+        <result property="id"    column="id"    />
+        <result property="paramKey"    column="param_key"    />
+        <result property="paramValue"    column="param_value"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="operName"    column="oper_name"    />
+    </resultMap>
+
+    <sql id="selectSysParamVo">
+        select id, param_key, param_value, remark, create_time, update_time, oper_name from t_sys_param
+    </sql>
+
+    <select id="selectSysParamList" parameterType="SysParam" resultMap="SysParamResult">
+        <include refid="selectSysParamVo"/>
+        <where>  
+            <if test="paramKey != null  and paramKey != ''"> and param_key = #{paramKey}</if>
+            <if test="paramValue != null  and paramValue != ''"> and param_value = #{paramValue}</if>
+            <if test="operName != null  and operName != ''"> and oper_name like concat('%', #{operName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysParamById" parameterType="Long" resultMap="SysParamResult">
+        <include refid="selectSysParamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysParam" parameterType="SysParam" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_param
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="paramKey != null and paramKey != ''">param_key,</if>
+            <if test="paramValue != null and paramValue != ''">param_value,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="operName != null">oper_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="paramKey != null and paramKey != ''">#{paramKey},</if>
+            <if test="paramValue != null and paramValue != ''">#{paramValue},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="operName != null">#{operName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysParam" parameterType="SysParam">
+        update t_sys_param
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paramKey != null and paramKey != ''">param_key = #{paramKey},</if>
+            <if test="paramValue != null and paramValue != ''">param_value = #{paramValue},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="operName != null">oper_name = #{operName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysParamById" parameterType="Long">
+        delete from t_sys_param where id = #{id}
+    </delete>
+
+    <delete id="deleteSysParamByIds" parameterType="String">
+        delete from t_sys_param where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

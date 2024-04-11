@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.LotteryHandicapMapper">
+    
+    <resultMap type="LotteryHandicap" id="LotteryHandicapResult">
+        <result property="id"    column="id"    />
+        <result property="handicapCode"    column="handicap_code"    />
+        <result property="handicapName"    column="handicap_name"    />
+        <result property="lotteryCode"    column="lottery_code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="pxh"    column="pxh"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectLotteryHandicapVo">
+        select id, handicap_code, handicap_name, lottery_code, create_time, update_time, remark, pxh, status from t_lottery_handicap
+    </sql>
+
+    <select id="selectLotteryHandicapList" parameterType="LotteryHandicap" resultMap="LotteryHandicapResult">
+        <include refid="selectLotteryHandicapVo"/>
+        <where>  
+            <if test="handicapCode != null  and handicapCode != ''"> and handicap_code = #{handicapCode}</if>
+            <if test="handicapName != null  and handicapName != ''"> and handicap_name like concat('%', #{handicapName}, '%')</if>
+            <if test="lotteryCode != null  and lotteryCode != ''"> and lottery_code = #{lotteryCode}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectLotteryHandicapById" parameterType="Long" resultMap="LotteryHandicapResult">
+        <include refid="selectLotteryHandicapVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLotteryHandicap" parameterType="LotteryHandicap" useGeneratedKeys="true" keyProperty="id">
+        insert into t_lottery_handicap
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="handicapCode != null">handicap_code,</if>
+            <if test="handicapName != null">handicap_name,</if>
+            <if test="lotteryCode != null">lottery_code,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="pxh != null">pxh,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="handicapCode != null">#{handicapCode},</if>
+            <if test="handicapName != null">#{handicapName},</if>
+            <if test="lotteryCode != null">#{lotteryCode},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="pxh != null">#{pxh},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLotteryHandicap" parameterType="LotteryHandicap">
+        update t_lottery_handicap
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="handicapCode != null">handicap_code = #{handicapCode},</if>
+            <if test="handicapName != null">handicap_name = #{handicapName},</if>
+            <if test="lotteryCode != null">lottery_code = #{lotteryCode},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="pxh != null">pxh = #{pxh},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryHandicapById" parameterType="Long">
+        delete from t_lottery_handicap where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryHandicapByIds" parameterType="String">
+        delete from t_lottery_handicap where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

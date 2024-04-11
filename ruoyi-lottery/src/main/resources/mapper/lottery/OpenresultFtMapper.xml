@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.OpenresultFtMapper">
+    
+    <resultMap type="OpenresultFt" id="OpenresultFtResult">
+        <result property="id"    column="id"    />
+        <result property="qs"    column="qs"    />
+        <result property="platQs"    column="plat_qs"    />
+        <result property="openResult"    column="open_result"    />
+        <result property="openStatus"    column="open_status"    />
+        <result property="currCount"    column="curr_count"    />
+        <result property="openTime"    column="open_time"    />
+        <result property="closeTime"    column="close_time"    />
+        <result property="openResultTime"    column="open_result_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectOpenresultFtVo">
+        select id, qs, plat_qs, open_result, open_status, curr_count, open_time, close_time, open_result_time, create_time, update_time from t_openresult_ft
+    </sql>
+
+    <select id="selectOpenresultFtList" parameterType="OpenresultFt" resultMap="OpenresultFtResult">
+        <include refid="selectOpenresultFtVo"/>
+        <where>  
+            <if test="qs != null  and qs != ''"> and qs = #{qs}</if>
+            <if test="platQs != null  and platQs != ''"> and plat_qs = #{platQs}</if>
+            <if test="openResult != null  and openResult != ''"> and open_result = #{openResult}</if>
+            <if test="openStatus != null "> and open_status = #{openStatus}</if>
+            <if test="currCount != null "> and curr_count = #{currCount}</if>
+            <if test="openTime != null "> and open_time = #{openTime}</if>
+            <if test="closeTime != null "> and close_time = #{closeTime}</if>
+            <if test="openResultTime != null "> and open_result_time = #{openResultTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpenresultFtById" parameterType="Long" resultMap="OpenresultFtResult">
+        <include refid="selectOpenresultFtVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOpenresultFt" parameterType="OpenresultFt" useGeneratedKeys="true" keyProperty="id">
+        insert into t_openresult_ft
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qs != null and qs != ''">qs,</if>
+            <if test="platQs != null">plat_qs,</if>
+            <if test="openResult != null">open_result,</if>
+            <if test="openStatus != null">open_status,</if>
+            <if test="currCount != null">curr_count,</if>
+            <if test="openTime != null">open_time,</if>
+            <if test="closeTime != null">close_time,</if>
+            <if test="openResultTime != null">open_result_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qs != null and qs != ''">#{qs},</if>
+            <if test="platQs != null">#{platQs},</if>
+            <if test="openResult != null">#{openResult},</if>
+            <if test="openStatus != null">#{openStatus},</if>
+            <if test="currCount != null">#{currCount},</if>
+            <if test="openTime != null">#{openTime},</if>
+            <if test="closeTime != null">#{closeTime},</if>
+            <if test="openResultTime != null">#{openResultTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpenresultFt" parameterType="OpenresultFt">
+        update t_openresult_ft
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qs != null and qs != ''">qs = #{qs},</if>
+            <if test="platQs != null">plat_qs = #{platQs},</if>
+            <if test="openResult != null">open_result = #{openResult},</if>
+            <if test="openStatus != null">open_status = #{openStatus},</if>
+            <if test="currCount != null">curr_count = #{currCount},</if>
+            <if test="openTime != null">open_time = #{openTime},</if>
+            <if test="closeTime != null">close_time = #{closeTime},</if>
+            <if test="openResultTime != null">open_result_time = #{openResultTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOpenresultFtById" parameterType="Long">
+        delete from t_openresult_ft where id = #{id}
+    </delete>
+
+    <delete id="deleteOpenresultFtByIds" parameterType="String">
+        delete from t_openresult_ft where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

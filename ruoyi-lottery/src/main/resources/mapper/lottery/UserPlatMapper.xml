@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.UserPlatMapper">
+    
+    <resultMap type="UserPlat" id="UserPlatResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="platCode"    column="plat_code"    />
+        <result property="platUserName"    column="plat_user_name"    />
+        <result property="platUserPassword"    column="plat_user_password"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectUserPlatVo">
+        select id, user_name, plat_code, plat_user_name, plat_user_password, status, create_time from t_user_plat
+    </sql>
+
+    <select id="selectUserPlatList" parameterType="UserPlat" resultMap="UserPlatResult">
+        <include refid="selectUserPlatVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="platCode != null  and platCode != ''"> and plat_code = #{platCode}</if>
+            <if test="platUserName != null  and platUserName != ''"> and plat_user_name like concat('%', #{platUserName}, '%')</if>
+            <if test="platUserPassword != null  and platUserPassword != ''"> and plat_user_password = #{platUserPassword}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserPlatById" parameterType="Long" resultMap="UserPlatResult">
+        <include refid="selectUserPlatVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserPlat" parameterType="UserPlat" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user_plat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="platCode != null">plat_code,</if>
+            <if test="platUserName != null">plat_user_name,</if>
+            <if test="platUserPassword != null">plat_user_password,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="platCode != null">#{platCode},</if>
+            <if test="platUserName != null">#{platUserName},</if>
+            <if test="platUserPassword != null">#{platUserPassword},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserPlat" parameterType="UserPlat">
+        update t_user_plat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="platCode != null">plat_code = #{platCode},</if>
+            <if test="platUserName != null">plat_user_name = #{platUserName},</if>
+            <if test="platUserPassword != null">plat_user_password = #{platUserPassword},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserPlatById" parameterType="Long">
+        delete from t_user_plat where id = #{id}
+    </delete>
+
+    <delete id="deleteUserPlatByIds" parameterType="String">
+        delete from t_user_plat where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

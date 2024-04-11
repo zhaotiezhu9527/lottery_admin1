@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.LotteryPlayMapper">
+    
+    <resultMap type="LotteryPlay" id="LotteryPlayResult">
+        <result property="id"    column="id"    />
+        <result property="playCode"    column="play_code"    />
+        <result property="playName"    column="play_name"    />
+        <result property="lotteryCode"    column="lottery_code"    />
+        <result property="handicapCode"    column="handicap_code"    />
+        <result property="wfts"    column="wfts"    />
+        <result property="zjsm"    column="zjsm"    />
+        <result property="fl"    column="fl"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="pxh"    column="pxh"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectLotteryPlayVo">
+        select id, play_code, play_name, lottery_code, handicap_code, wfts, zjsm, fl, create_time, update_time, pxh, status from t_lottery_play
+    </sql>
+
+    <select id="selectLotteryPlayList" parameterType="LotteryPlay" resultMap="LotteryPlayResult">
+        <include refid="selectLotteryPlayVo"/>
+        <where>  
+            <if test="playCode != null  and playCode != ''"> and play_code = #{playCode}</if>
+            <if test="playName != null  and playName != ''"> and play_name like concat('%', #{playName}, '%')</if>
+            <if test="lotteryCode != null  and lotteryCode != ''"> and lottery_code = #{lotteryCode}</if>
+            <if test="handicapCode != null  and handicapCode != ''"> and handicap_code = #{handicapCode}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectLotteryPlayById" parameterType="Long" resultMap="LotteryPlayResult">
+        <include refid="selectLotteryPlayVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLotteryPlay" parameterType="LotteryPlay" useGeneratedKeys="true" keyProperty="id">
+        insert into t_lottery_play
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="playCode != null">play_code,</if>
+            <if test="playName != null">play_name,</if>
+            <if test="lotteryCode != null">lottery_code,</if>
+            <if test="handicapCode != null">handicap_code,</if>
+            <if test="wfts != null">wfts,</if>
+            <if test="zjsm != null">zjsm,</if>
+            <if test="fl != null">fl,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="pxh != null">pxh,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="playCode != null">#{playCode},</if>
+            <if test="playName != null">#{playName},</if>
+            <if test="lotteryCode != null">#{lotteryCode},</if>
+            <if test="handicapCode != null">#{handicapCode},</if>
+            <if test="wfts != null">#{wfts},</if>
+            <if test="zjsm != null">#{zjsm},</if>
+            <if test="fl != null">#{fl},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="pxh != null">#{pxh},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLotteryPlay" parameterType="LotteryPlay">
+        update t_lottery_play
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="playCode != null">play_code = #{playCode},</if>
+            <if test="playName != null">play_name = #{playName},</if>
+            <if test="lotteryCode != null">lottery_code = #{lotteryCode},</if>
+            <if test="handicapCode != null">handicap_code = #{handicapCode},</if>
+            <if test="wfts != null">wfts = #{wfts},</if>
+            <if test="zjsm != null">zjsm = #{zjsm},</if>
+            <if test="fl != null">fl = #{fl},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="pxh != null">pxh = #{pxh},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryPlayById" parameterType="Long">
+        delete from t_lottery_play where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryPlayByIds" parameterType="String">
+        delete from t_lottery_play where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

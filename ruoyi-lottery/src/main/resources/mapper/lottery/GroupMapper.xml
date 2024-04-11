@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.GroupMapper">
+    
+    <resultMap type="Group" id="GroupResult">
+        <result property="id"    column="id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectGroupVo">
+        select id, group_name, create_time from t_group
+    </sql>
+
+    <select id="selectGroupList" parameterType="Group" resultMap="GroupResult">
+        <include refid="selectGroupVo"/>
+        <where>  
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectGroupById" parameterType="Long" resultMap="GroupResult">
+        <include refid="selectGroupVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGroup" parameterType="Group" useGeneratedKeys="true" keyProperty="id">
+        insert into t_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">group_name,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">#{groupName},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGroup" parameterType="Group">
+        update t_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGroupById" parameterType="Long">
+        delete from t_group where id = #{id}
+    </delete>
+
+    <delete id="deleteGroupByIds" parameterType="String">
+        delete from t_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

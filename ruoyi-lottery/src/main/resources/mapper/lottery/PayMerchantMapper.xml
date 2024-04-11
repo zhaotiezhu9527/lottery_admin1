@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.PayMerchantMapper">
+    
+    <resultMap type="PayMerchant" id="PayMerchantResult">
+        <result property="id"    column="id"    />
+        <result property="merchantCode"    column="merchant_code"    />
+        <result property="merchantName"    column="merchant_name"    />
+        <result property="merchantDetail"    column="merchant_detail"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="callbackUrl"    column="callback_url"    />
+        <result property="callbackIp"    column="callback_ip"    />
+        <result property="payUrl"    column="pay_url"    />
+    </resultMap>
+
+    <sql id="selectPayMerchantVo">
+        select id, merchant_code, merchant_name, merchant_detail, create_time, update_time, status, callback_url, callback_ip, pay_url from t_pay_merchant
+    </sql>
+
+    <select id="selectPayMerchantList" parameterType="PayMerchant" resultMap="PayMerchantResult">
+        <include refid="selectPayMerchantVo"/>
+        <where>  
+            <if test="merchantCode != null  and merchantCode != ''"> and merchant_code = #{merchantCode}</if>
+            <if test="merchantName != null  and merchantName != ''"> and merchant_name like concat('%', #{merchantName}, '%')</if>
+            <if test="merchantDetail != null  and merchantDetail != ''"> and merchant_detail = #{merchantDetail}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="callbackUrl != null  and callbackUrl != ''"> and callback_url = #{callbackUrl}</if>
+            <if test="callbackIp != null  and callbackIp != ''"> and callback_ip = #{callbackIp}</if>
+            <if test="payUrl != null  and payUrl != ''"> and pay_url = #{payUrl}</if>
+        </where>
+    </select>
+    
+    <select id="selectPayMerchantById" parameterType="Long" resultMap="PayMerchantResult">
+        <include refid="selectPayMerchantVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPayMerchant" parameterType="PayMerchant" useGeneratedKeys="true" keyProperty="id">
+        insert into t_pay_merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="merchantCode != null and merchantCode != ''">merchant_code,</if>
+            <if test="merchantName != null">merchant_name,</if>
+            <if test="merchantDetail != null">merchant_detail,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="callbackUrl != null">callback_url,</if>
+            <if test="callbackIp != null">callback_ip,</if>
+            <if test="payUrl != null">pay_url,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="merchantCode != null and merchantCode != ''">#{merchantCode},</if>
+            <if test="merchantName != null">#{merchantName},</if>
+            <if test="merchantDetail != null">#{merchantDetail},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="callbackUrl != null">#{callbackUrl},</if>
+            <if test="callbackIp != null">#{callbackIp},</if>
+            <if test="payUrl != null">#{payUrl},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayMerchant" parameterType="PayMerchant">
+        update t_pay_merchant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="merchantCode != null and merchantCode != ''">merchant_code = #{merchantCode},</if>
+            <if test="merchantName != null">merchant_name = #{merchantName},</if>
+            <if test="merchantDetail != null">merchant_detail = #{merchantDetail},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="callbackUrl != null">callback_url = #{callbackUrl},</if>
+            <if test="callbackIp != null">callback_ip = #{callbackIp},</if>
+            <if test="payUrl != null">pay_url = #{payUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayMerchantById" parameterType="Long">
+        delete from t_pay_merchant where id = #{id}
+    </delete>
+
+    <delete id="deletePayMerchantByIds" parameterType="String">
+        delete from t_pay_merchant where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

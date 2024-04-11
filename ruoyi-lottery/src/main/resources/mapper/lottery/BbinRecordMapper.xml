@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.BbinRecordMapper">
+    
+    <resultMap type="BbinRecord" id="BbinRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="platUserName"    column="plat_user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="gameName"    column="game_name"    />
+        <result property="effectiveBet"    column="effective_bet"    />
+        <result property="allBet"    column="all_bet"    />
+        <result property="profit"    column="profit"    />
+        <result property="betTime"    column="bet_time"    />
+        <result property="wagersDate"    column="wagers_date"    />
+        <result property="settleTime"    column="settle_time"    />
+        <result property="modifiedDate"    column="modified_date"    />
+        <result property="resultStatus"    column="result_status"    />
+        <result property="openResult"    column="open_result"    />
+        <result property="card"    column="card"    />
+        <result property="serialId"    column="serial_id"    />
+        <result property="roundNo"    column="round_no"    />
+        <result property="wagerDetail"    column="wager_detail"    />
+        <result property="gameType"    column="game_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBbinRecordVo">
+        select id, user_name, plat_user_name, order_no, game_id, game_name, effective_bet, all_bet, profit, bet_time, wagers_date, settle_time, modified_date, result_status, open_result, card, serial_id, round_no, wager_detail, game_type, create_time, update_time from t_bbin_record
+    </sql>
+
+    <select id="selectBbinRecordList" parameterType="BbinRecord" resultMap="BbinRecordResult">
+        <include refid="selectBbinRecordVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="platUserName != null  and platUserName != ''"> and plat_user_name like concat('%', #{platUserName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="gameName != null  and gameName != ''"> and game_name like concat('%', #{gameName}, '%')</if>
+            <if test="effectiveBet != null "> and effective_bet = #{effectiveBet}</if>
+            <if test="allBet != null "> and all_bet = #{allBet}</if>
+            <if test="profit != null "> and profit = #{profit}</if>
+            <if test="betTime != null "> and bet_time = #{betTime}</if>
+            <if test="wagersDate != null "> and wagers_date = #{wagersDate}</if>
+            <if test="settleTime != null "> and settle_time = #{settleTime}</if>
+            <if test="modifiedDate != null "> and modified_date = #{modifiedDate}</if>
+            <if test="resultStatus != null  and resultStatus != ''"> and result_status = #{resultStatus}</if>
+            <if test="openResult != null  and openResult != ''"> and open_result = #{openResult}</if>
+            <if test="card != null  and card != ''"> and card = #{card}</if>
+            <if test="serialId != null  and serialId != ''"> and serial_id = #{serialId}</if>
+            <if test="roundNo != null  and roundNo != ''"> and round_no = #{roundNo}</if>
+            <if test="wagerDetail != null  and wagerDetail != ''"> and wager_detail = #{wagerDetail}</if>
+            <if test="gameType != null "> and game_type = #{gameType}</if>
+        </where>
+    </select>
+    
+    <select id="selectBbinRecordById" parameterType="Long" resultMap="BbinRecordResult">
+        <include refid="selectBbinRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBbinRecord" parameterType="BbinRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_bbin_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="platUserName != null and platUserName != ''">plat_user_name,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="gameId != null">game_id,</if>
+            <if test="gameName != null">game_name,</if>
+            <if test="effectiveBet != null">effective_bet,</if>
+            <if test="allBet != null">all_bet,</if>
+            <if test="profit != null">profit,</if>
+            <if test="betTime != null">bet_time,</if>
+            <if test="wagersDate != null">wagers_date,</if>
+            <if test="settleTime != null">settle_time,</if>
+            <if test="modifiedDate != null">modified_date,</if>
+            <if test="resultStatus != null">result_status,</if>
+            <if test="openResult != null">open_result,</if>
+            <if test="card != null">card,</if>
+            <if test="serialId != null">serial_id,</if>
+            <if test="roundNo != null">round_no,</if>
+            <if test="wagerDetail != null">wager_detail,</if>
+            <if test="gameType != null">game_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="platUserName != null and platUserName != ''">#{platUserName},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="gameId != null">#{gameId},</if>
+            <if test="gameName != null">#{gameName},</if>
+            <if test="effectiveBet != null">#{effectiveBet},</if>
+            <if test="allBet != null">#{allBet},</if>
+            <if test="profit != null">#{profit},</if>
+            <if test="betTime != null">#{betTime},</if>
+            <if test="wagersDate != null">#{wagersDate},</if>
+            <if test="settleTime != null">#{settleTime},</if>
+            <if test="modifiedDate != null">#{modifiedDate},</if>
+            <if test="resultStatus != null">#{resultStatus},</if>
+            <if test="openResult != null">#{openResult},</if>
+            <if test="card != null">#{card},</if>
+            <if test="serialId != null">#{serialId},</if>
+            <if test="roundNo != null">#{roundNo},</if>
+            <if test="wagerDetail != null">#{wagerDetail},</if>
+            <if test="gameType != null">#{gameType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBbinRecord" parameterType="BbinRecord">
+        update t_bbin_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="platUserName != null and platUserName != ''">plat_user_name = #{platUserName},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="gameId != null">game_id = #{gameId},</if>
+            <if test="gameName != null">game_name = #{gameName},</if>
+            <if test="effectiveBet != null">effective_bet = #{effectiveBet},</if>
+            <if test="allBet != null">all_bet = #{allBet},</if>
+            <if test="profit != null">profit = #{profit},</if>
+            <if test="betTime != null">bet_time = #{betTime},</if>
+            <if test="wagersDate != null">wagers_date = #{wagersDate},</if>
+            <if test="settleTime != null">settle_time = #{settleTime},</if>
+            <if test="modifiedDate != null">modified_date = #{modifiedDate},</if>
+            <if test="resultStatus != null">result_status = #{resultStatus},</if>
+            <if test="openResult != null">open_result = #{openResult},</if>
+            <if test="card != null">card = #{card},</if>
+            <if test="serialId != null">serial_id = #{serialId},</if>
+            <if test="roundNo != null">round_no = #{roundNo},</if>
+            <if test="wagerDetail != null">wager_detail = #{wagerDetail},</if>
+            <if test="gameType != null">game_type = #{gameType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBbinRecordById" parameterType="Long">
+        delete from t_bbin_record where id = #{id}
+    </delete>
+
+    <delete id="deleteBbinRecordByIds" parameterType="String">
+        delete from t_bbin_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

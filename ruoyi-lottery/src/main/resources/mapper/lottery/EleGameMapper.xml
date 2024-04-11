@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.EleGameMapper">
+    
+    <resultMap type="EleGame" id="EleGameResult">
+        <result property="id"    column="id"    />
+        <result property="platCode"    column="plat_code"    />
+        <result property="platSubCode"    column="plat_sub_code"    />
+        <result property="gameCode"    column="game_code"    />
+        <result property="gameName"    column="game_name"    />
+        <result property="img"    column="img"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="pxh"    column="pxh"    />
+    </resultMap>
+
+    <sql id="selectEleGameVo">
+        select id, plat_code, plat_sub_code, game_code, game_name, img, status, create_time, update_time, pxh from t_ele_game
+    </sql>
+
+    <select id="selectEleGameList" parameterType="EleGame" resultMap="EleGameResult">
+        <include refid="selectEleGameVo"/>
+        <where>  
+            <if test="platCode != null  and platCode != ''"> and plat_code = #{platCode}</if>
+            <if test="platSubCode != null  and platSubCode != ''"> and plat_sub_code = #{platSubCode}</if>
+            <if test="gameCode != null  and gameCode != ''"> and game_code = #{gameCode}</if>
+            <if test="gameName != null  and gameName != ''"> and game_name like concat('%', #{gameName}, '%')</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="pxh != null "> and pxh = #{pxh}</if>
+        </where>
+    </select>
+    
+    <select id="selectEleGameById" parameterType="Long" resultMap="EleGameResult">
+        <include refid="selectEleGameVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEleGame" parameterType="EleGame" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ele_game
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platCode != null and platCode != ''">plat_code,</if>
+            <if test="platSubCode != null and platSubCode != ''">plat_sub_code,</if>
+            <if test="gameCode != null and gameCode != ''">game_code,</if>
+            <if test="gameName != null">game_name,</if>
+            <if test="img != null">img,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="pxh != null">pxh,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platCode != null and platCode != ''">#{platCode},</if>
+            <if test="platSubCode != null and platSubCode != ''">#{platSubCode},</if>
+            <if test="gameCode != null and gameCode != ''">#{gameCode},</if>
+            <if test="gameName != null">#{gameName},</if>
+            <if test="img != null">#{img},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="pxh != null">#{pxh},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEleGame" parameterType="EleGame">
+        update t_ele_game
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platCode != null and platCode != ''">plat_code = #{platCode},</if>
+            <if test="platSubCode != null and platSubCode != ''">plat_sub_code = #{platSubCode},</if>
+            <if test="gameCode != null and gameCode != ''">game_code = #{gameCode},</if>
+            <if test="gameName != null">game_name = #{gameName},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="pxh != null">pxh = #{pxh},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEleGameById" parameterType="Long">
+        delete from t_ele_game where id = #{id}
+    </delete>
+
+    <delete id="deleteEleGameByIds" parameterType="String">
+        delete from t_ele_game where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

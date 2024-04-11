@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.LyRecordMapper">
+    
+    <resultMap type="LyRecord" id="LyRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="platUserName"    column="plat_user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="gameName"    column="game_name"    />
+        <result property="effectiveBet"    column="effective_bet"    />
+        <result property="allBet"    column="all_bet"    />
+        <result property="profit"    column="profit"    />
+        <result property="gameStartTime"    column="game_start_time"    />
+        <result property="gameEndTime"    column="game_end_time"    />
+        <result property="settleTime"    column="settle_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLyRecordVo">
+        select id, user_name, plat_user_name, order_no, game_id, game_name, effective_bet, all_bet, profit, game_start_time, game_end_time, settle_time, create_time, update_time from t_ly_record
+    </sql>
+
+    <select id="selectLyRecordList" parameterType="LyRecord" resultMap="LyRecordResult">
+        <include refid="selectLyRecordVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="platUserName != null  and platUserName != ''"> and plat_user_name like concat('%', #{platUserName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="gameName != null  and gameName != ''"> and game_name like concat('%', #{gameName}, '%')</if>
+            <if test="effectiveBet != null "> and effective_bet = #{effectiveBet}</if>
+            <if test="allBet != null "> and all_bet = #{allBet}</if>
+            <if test="profit != null "> and profit = #{profit}</if>
+            <if test="gameStartTime != null "> and game_start_time = #{gameStartTime}</if>
+            <if test="gameEndTime != null "> and game_end_time = #{gameEndTime}</if>
+            <if test="settleTime != null "> and settle_time = #{settleTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLyRecordById" parameterType="Long" resultMap="LyRecordResult">
+        <include refid="selectLyRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLyRecord" parameterType="LyRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_ly_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="platUserName != null and platUserName != ''">plat_user_name,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="gameId != null">game_id,</if>
+            <if test="gameName != null">game_name,</if>
+            <if test="effectiveBet != null">effective_bet,</if>
+            <if test="allBet != null">all_bet,</if>
+            <if test="profit != null">profit,</if>
+            <if test="gameStartTime != null">game_start_time,</if>
+            <if test="gameEndTime != null">game_end_time,</if>
+            <if test="settleTime != null">settle_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="platUserName != null and platUserName != ''">#{platUserName},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="gameId != null">#{gameId},</if>
+            <if test="gameName != null">#{gameName},</if>
+            <if test="effectiveBet != null">#{effectiveBet},</if>
+            <if test="allBet != null">#{allBet},</if>
+            <if test="profit != null">#{profit},</if>
+            <if test="gameStartTime != null">#{gameStartTime},</if>
+            <if test="gameEndTime != null">#{gameEndTime},</if>
+            <if test="settleTime != null">#{settleTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLyRecord" parameterType="LyRecord">
+        update t_ly_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="platUserName != null and platUserName != ''">plat_user_name = #{platUserName},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="gameId != null">game_id = #{gameId},</if>
+            <if test="gameName != null">game_name = #{gameName},</if>
+            <if test="effectiveBet != null">effective_bet = #{effectiveBet},</if>
+            <if test="allBet != null">all_bet = #{allBet},</if>
+            <if test="profit != null">profit = #{profit},</if>
+            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
+            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
+            <if test="settleTime != null">settle_time = #{settleTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLyRecordById" parameterType="Long">
+        delete from t_ly_record where id = #{id}
+    </delete>
+
+    <delete id="deleteLyRecordByIds" parameterType="String">
+        delete from t_ly_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

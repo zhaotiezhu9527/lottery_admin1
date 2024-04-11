@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.UserLoginLogMapper">
+    
+    <resultMap type="UserLoginLog" id="UserLoginLogResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="loginIp"    column="login_ip"    />
+        <result property="addrDetail"    column="addr_detail"    />
+        <result property="loginDomain"    column="login_domain"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectUserLoginLogVo">
+        select id, user_name, login_ip, addr_detail, login_domain, create_time from t_user_login_log
+    </sql>
+
+    <select id="selectUserLoginLogList" parameterType="UserLoginLog" resultMap="UserLoginLogResult">
+        <include refid="selectUserLoginLogVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
+            <if test="addrDetail != null  and addrDetail != ''"> and addr_detail = #{addrDetail}</if>
+            <if test="loginDomain != null  and loginDomain != ''"> and login_domain = #{loginDomain}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserLoginLogById" parameterType="Long" resultMap="UserLoginLogResult">
+        <include refid="selectUserLoginLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserLoginLog" parameterType="UserLoginLog" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user_login_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="addrDetail != null">addr_detail,</if>
+            <if test="loginDomain != null">login_domain,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="loginIp != null">#{loginIp},</if>
+            <if test="addrDetail != null">#{addrDetail},</if>
+            <if test="loginDomain != null">#{loginDomain},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLoginLog" parameterType="UserLoginLog">
+        update t_user_login_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="loginIp != null">login_ip = #{loginIp},</if>
+            <if test="addrDetail != null">addr_detail = #{addrDetail},</if>
+            <if test="loginDomain != null">login_domain = #{loginDomain},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserLoginLogById" parameterType="Long">
+        delete from t_user_login_log where id = #{id}
+    </delete>
+
+    <delete id="deleteUserLoginLogByIds" parameterType="String">
+        delete from t_user_login_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

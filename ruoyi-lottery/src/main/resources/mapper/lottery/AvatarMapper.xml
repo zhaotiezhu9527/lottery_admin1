@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.AvatarMapper">
+    
+    <resultMap type="Avatar" id="AvatarResult">
+        <result property="id"    column="id"    />
+        <result property="avatarImg"    column="avatar_img"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="pxh"    column="pxh"    />
+    </resultMap>
+
+    <sql id="selectAvatarVo">
+        select id, avatar_img, create_time, status, pxh from t_avatar
+    </sql>
+
+    <select id="selectAvatarList" parameterType="Avatar" resultMap="AvatarResult">
+        <include refid="selectAvatarVo"/>
+        <where>  
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectAvatarById" parameterType="Long" resultMap="AvatarResult">
+        <include refid="selectAvatarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAvatar" parameterType="Avatar" useGeneratedKeys="true" keyProperty="id">
+        insert into t_avatar
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="avatarImg != null">avatar_img,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="pxh != null">pxh,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="avatarImg != null">#{avatarImg},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="pxh != null">#{pxh},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAvatar" parameterType="Avatar">
+        update t_avatar
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="avatarImg != null">avatar_img = #{avatarImg},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="pxh != null">pxh = #{pxh},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAvatarById" parameterType="Long">
+        delete from t_avatar where id = #{id}
+    </delete>
+
+    <delete id="deleteAvatarByIds" parameterType="String">
+        delete from t_avatar where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

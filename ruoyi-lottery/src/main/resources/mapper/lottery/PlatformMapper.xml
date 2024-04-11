@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.PlatformMapper">
+    
+    <resultMap type="Platform" id="PlatformResult">
+        <result property="id"    column="id"    />
+        <result property="platCode"    column="plat_code"    />
+        <result property="platName"    column="plat_name"    />
+        <result property="subPlatCode"    column="sub_plat_code"    />
+        <result property="subPlatName"    column="sub_plat_name"    />
+        <result property="platType"    column="plat_type"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="status"    column="status"    />
+        <result property="maintenanceStatus"    column="maintenance_status"    />
+        <result property="maintenanceMsg"    column="maintenance_msg"    />
+        <result property="img1"    column="img1"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="pxh"    column="pxh"    />
+    </resultMap>
+
+    <sql id="selectPlatformVo">
+        select id, plat_code, plat_name, sub_plat_code, sub_plat_name, plat_type, ratio, status, maintenance_status, maintenance_msg, img1, create_time, update_time, remark, pxh from t_platform
+    </sql>
+
+    <select id="selectPlatformList" parameterType="Platform" resultMap="PlatformResult">
+        <include refid="selectPlatformVo"/>
+        <where>  
+            <if test="platCode != null  and platCode != ''"> and plat_code = #{platCode}</if>
+            <if test="platName != null  and platName != ''"> and plat_name like concat('%', #{platName}, '%')</if>
+            <if test="subPlatCode != null  and subPlatCode != ''"> and sub_plat_code = #{subPlatCode}</if>
+            <if test="subPlatName != null  and subPlatName != ''"> and sub_plat_name like concat('%', #{subPlatName}, '%')</if>
+            <if test="platType != null "> and plat_type = #{platType}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="maintenanceStatus != null "> and maintenance_status = #{maintenanceStatus}</if>
+            <if test="maintenanceMsg != null  and maintenanceMsg != ''"> and maintenance_msg = #{maintenanceMsg}</if>
+            <if test="img1 != null  and img1 != ''"> and img1 = #{img1}</if>
+            <if test="pxh != null "> and pxh = #{pxh}</if>
+        </where>
+    </select>
+    
+    <select id="selectPlatformById" parameterType="Long" resultMap="PlatformResult">
+        <include refid="selectPlatformVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPlatform" parameterType="Platform" useGeneratedKeys="true" keyProperty="id">
+        insert into t_platform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platCode != null and platCode != ''">plat_code,</if>
+            <if test="platName != null">plat_name,</if>
+            <if test="subPlatCode != null">sub_plat_code,</if>
+            <if test="subPlatName != null">sub_plat_name,</if>
+            <if test="platType != null">plat_type,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="status != null">status,</if>
+            <if test="maintenanceStatus != null">maintenance_status,</if>
+            <if test="maintenanceMsg != null">maintenance_msg,</if>
+            <if test="img1 != null">img1,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="pxh != null">pxh,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platCode != null and platCode != ''">#{platCode},</if>
+            <if test="platName != null">#{platName},</if>
+            <if test="subPlatCode != null">#{subPlatCode},</if>
+            <if test="subPlatName != null">#{subPlatName},</if>
+            <if test="platType != null">#{platType},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="status != null">#{status},</if>
+            <if test="maintenanceStatus != null">#{maintenanceStatus},</if>
+            <if test="maintenanceMsg != null">#{maintenanceMsg},</if>
+            <if test="img1 != null">#{img1},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="pxh != null">#{pxh},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatform" parameterType="Platform">
+        update t_platform
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platCode != null and platCode != ''">plat_code = #{platCode},</if>
+            <if test="platName != null">plat_name = #{platName},</if>
+            <if test="subPlatCode != null">sub_plat_code = #{subPlatCode},</if>
+            <if test="subPlatName != null">sub_plat_name = #{subPlatName},</if>
+            <if test="platType != null">plat_type = #{platType},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="maintenanceStatus != null">maintenance_status = #{maintenanceStatus},</if>
+            <if test="maintenanceMsg != null">maintenance_msg = #{maintenanceMsg},</if>
+            <if test="img1 != null">img1 = #{img1},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="pxh != null">pxh = #{pxh},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformById" parameterType="Long">
+        delete from t_platform where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformByIds" parameterType="String">
+        delete from t_platform where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

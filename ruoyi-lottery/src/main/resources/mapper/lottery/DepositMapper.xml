@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.DepositMapper">
+    
+    <resultMap type="Deposit" id="DepositResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="amount"    column="amount"    />
+        <result property="depositType"    column="deposit_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="accountDetail"    column="account_detail"    />
+        <result property="depositDetail"    column="deposit_detail"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectDepositVo">
+        select id, user_name, order_no, amount, deposit_type, create_time, check_time, update_time, oper_name, remark, account_detail, deposit_detail, status from t_deposit
+    </sql>
+
+    <select id="selectDepositList" parameterType="Deposit" resultMap="DepositResult">
+        <include refid="selectDepositVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="depositType != null "> and deposit_type = #{depositType}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="operName != null  and operName != ''"> and oper_name like concat('%', #{operName}, '%')</if>
+            <if test="accountDetail != null  and accountDetail != ''"> and account_detail = #{accountDetail}</if>
+            <if test="depositDetail != null  and depositDetail != ''"> and deposit_detail = #{depositDetail}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDepositById" parameterType="Long" resultMap="DepositResult">
+        <include refid="selectDepositVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDeposit" parameterType="Deposit" useGeneratedKeys="true" keyProperty="id">
+        insert into t_deposit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="amount != null">amount,</if>
+            <if test="depositType != null">deposit_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="operName != null">oper_name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="accountDetail != null">account_detail,</if>
+            <if test="depositDetail != null">deposit_detail,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="depositType != null">#{depositType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="operName != null">#{operName},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="accountDetail != null">#{accountDetail},</if>
+            <if test="depositDetail != null">#{depositDetail},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDeposit" parameterType="Deposit">
+        update t_deposit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="depositType != null">deposit_type = #{depositType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="operName != null">oper_name = #{operName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="accountDetail != null">account_detail = #{accountDetail},</if>
+            <if test="depositDetail != null">deposit_detail = #{depositDetail},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDepositById" parameterType="Long">
+        delete from t_deposit where id = #{id}
+    </delete>
+
+    <delete id="deleteDepositByIds" parameterType="String">
+        delete from t_deposit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
