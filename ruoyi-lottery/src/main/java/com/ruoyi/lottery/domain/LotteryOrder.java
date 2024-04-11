@@ -88,11 +88,11 @@ public class LotteryOrder extends BaseEntity
     private Date settleTime;
 
     /** 0:待结算 1:结算中(未使用) 2:已结算 3:已撤单 4:结算异常 */
-    @Excel(name = "0:待结算 1:结算中(未使用) 2:已结算 3:已撤单 4:结算异常")
+    @Excel(name = "0:待结算 1:结算中(未使用) 2:已结算 3:已撤单 4:结算异常", readConverterExp = "0=待结算,1=结算中,2=已结算,3=已撤单,4=结算异常")
     private Long settleStatus;
 
     /** 0:待结算 1:已中奖 2:未中奖 3:已撤单 4:和局 */
-    @Excel(name = "0:待结算 1:已中奖 2:未中奖 3:已撤单 4:和局")
+    @Excel(name = "订单状态", readConverterExp = "0=待结算,1=已中奖,2=未中奖,3=已撤单,4=和局")
     private Long orderStatus;
 
     /** 开奖结果 */

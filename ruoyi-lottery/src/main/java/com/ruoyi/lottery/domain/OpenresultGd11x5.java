@@ -37,7 +37,7 @@ public class OpenresultGd11x5 extends BaseEntity
     private String openResult;
 
     /** 0:已开奖 1:未开奖 */
-    @Excel(name = "0:已开奖 1:未开奖")
+    @Excel(name = "开奖状态",readConverterExp = "0=已开奖,1=未开奖")
     private Long openStatus;
 
     /** 当前第N期 */
