@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.EleGameMapper;
@@ -20,6 +21,8 @@ public class EleGameServiceImpl extends ServiceImpl<EleGameMapper, EleGame> impl
 {
     @Autowired
     private EleGameMapper eleGameMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询游戏列表
@@ -42,7 +45,10 @@ public class EleGameServiceImpl extends ServiceImpl<EleGameMapper, EleGame> impl
     @Override
     public List<EleGame> selectEleGameList(EleGame eleGame)
     {
-        return eleGameMapper.selectEleGameList(eleGame);
+        List<EleGame> list = eleGameMapper.selectEleGameList(eleGame);
+        String url = sysParamService.getParamByKey("resource_domain");
+        list.forEach(e -> e.setImg(url + e.getImg()));
+        return list;
     }
 
     /**

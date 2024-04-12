@@ -55,6 +55,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="roundNo != null  and roundNo != ''"> and round_no = #{roundNo}</if>
             <if test="wagerDetail != null  and wagerDetail != ''"> and wager_detail = #{wagerDetail}</if>
             <if test="gameType != null "> and game_type = #{gameType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and settle_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and settle_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     

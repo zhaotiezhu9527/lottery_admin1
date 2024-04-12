@@ -40,7 +40,7 @@ public class PayOrder extends BaseEntity
     private BigDecimal amount;
 
     /** 0:未支付 1:成功 2:失败 */
-    @Excel(name = "0:未支付 1:成功 2:失败")
+    @Excel(name = "支付结果", readConverterExp = "0=未支付,1=成功,2=失败")
     private Long status;
 
     /** 错误消息 */

@@ -26,8 +26,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduOrderVo"/>
         <where>  
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
-            <if test="platOrderNo != null  and platOrderNo != ''"> and plat_order_no = #{platOrderNo}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no like concat('%', #{orderNo}, '%')</if>
+            <if test="platOrderNo != null  and platOrderNo != ''"> and plat_order_no like concat('%', #{platOrderNo}, '%') </if>
             <if test="amount != null "> and amount = #{amount}</if>
             <if test="eduType != null "> and edu_type = #{eduType}</if>
             <if test="platCode != null  and platCode != ''"> and plat_code = #{platCode}</if>

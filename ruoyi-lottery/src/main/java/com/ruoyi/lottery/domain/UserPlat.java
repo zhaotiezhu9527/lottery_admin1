@@ -35,7 +35,6 @@ public class UserPlat extends BaseEntity
     private String platUserName;
 
     /** 平台游戏密码 */
-    @Excel(name = "平台游戏密码")
     private String platUserPassword;
 
     /** 0:正常 1:停用 */

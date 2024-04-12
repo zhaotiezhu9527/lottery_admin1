@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectUserPlatVo">
-        select id, user_name, plat_code, plat_user_name, plat_user_password, status, create_time from t_user_plat
+        select id, user_name, plat_code, plat_user_name, REPEAT('*', LENGTH(plat_user_password)) AS plat_user_password, status, create_time from t_user_plat
     </sql>
 
     <select id="selectUserPlatList" parameterType="UserPlat" resultMap="UserPlatResult">

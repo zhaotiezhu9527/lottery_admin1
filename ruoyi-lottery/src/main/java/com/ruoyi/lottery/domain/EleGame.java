@@ -43,7 +43,7 @@ public class EleGame extends BaseEntity
     private String img;
 
     /** 0:启用 1:停用 */
-    @Excel(name = "0:启用 1:停用")
+    @Excel(name = "是否启用", readConverterExp = "0=启用,1=停用")
     private Long status;
 
     /** 排序号 */

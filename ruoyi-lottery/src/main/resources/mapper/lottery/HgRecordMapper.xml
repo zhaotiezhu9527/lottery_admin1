@@ -65,6 +65,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parlaynum != null "> and parlaynum = #{parlaynum}</if>
             <if test="parlaysub != null  and parlaysub != ''"> and parlaysub = #{parlaysub}</if>
             <if test="rawData != null  and rawData != ''"> and raw_data = #{rawData}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and settle_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and settle_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     

@@ -34,12 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="subPlatCode != null  and subPlatCode != ''"> and sub_plat_code = #{subPlatCode}</if>
             <if test="subPlatName != null  and subPlatName != ''"> and sub_plat_name like concat('%', #{subPlatName}, '%')</if>
             <if test="platType != null "> and plat_type = #{platType}</if>
-            <if test="ratio != null "> and ratio = #{ratio}</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="maintenanceStatus != null "> and maintenance_status = #{maintenanceStatus}</if>
-            <if test="maintenanceMsg != null  and maintenanceMsg != ''"> and maintenance_msg = #{maintenanceMsg}</if>
-            <if test="img1 != null  and img1 != ''"> and img1 = #{img1}</if>
-            <if test="pxh != null "> and pxh = #{pxh}</if>
         </where>
     </select>
     

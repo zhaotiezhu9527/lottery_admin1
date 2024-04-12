@@ -65,6 +65,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rawData != null  and rawData != ''"> and raw_data = #{rawData}</if>
             <if test="resettlementinfo != null  and resettlementinfo != ''"> and resettlementinfo = #{resettlementinfo}</if>
             <if test="isLive != null "> and is_live = #{isLive}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and settle_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and settle_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     

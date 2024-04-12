@@ -28,9 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platSubCode != null  and platSubCode != ''"> and plat_sub_code = #{platSubCode}</if>
             <if test="gameCode != null  and gameCode != ''"> and game_code = #{gameCode}</if>
             <if test="gameName != null  and gameName != ''"> and game_name like concat('%', #{gameName}, '%')</if>
-            <if test="img != null  and img != ''"> and img = #{img}</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="pxh != null "> and pxh = #{pxh}</if>
         </where>
     </select>
     

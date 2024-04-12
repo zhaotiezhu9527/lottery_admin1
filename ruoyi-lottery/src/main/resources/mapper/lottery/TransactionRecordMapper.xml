@@ -35,6 +35,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="businessType != null "> and business_type = #{businessType}</if>
             <if test="businessOrder != null  and businessOrder != ''"> and business_order = #{businessOrder}</if>
             <if test="operName != null  and operName != ''"> and oper_name like concat('%', #{operName}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and create_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and create_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     
