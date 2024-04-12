@@ -1,7 +1,11 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.dromara.x.file.storage.core.FileInfo;
+import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +24,7 @@ import com.ruoyi.system.domain.SysFileInfo;
 import com.ruoyi.system.service.ISysFileInfoService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件信息Controller
@@ -34,71 +39,18 @@ public class SysFileInfoController extends BaseController
     @Autowired
     private ISysFileInfoService sysFileInfoService;
 
-    /**
-     * 查询文件信息列表
-     */
-    @PreAuthorize("@ss.hasPermi('system:sysFileInfo:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(SysFileInfo sysFileInfo)
-    {
-        startPage();
-        List<SysFileInfo> list = sysFileInfoService.selectSysFileInfoList(sysFileInfo);
-        return getDataTable(list);
-    }
+    @Autowired
+    private FileStorageService fileStorageService;//注入实列
 
     /**
-     * 导出文件信息列表
+     * 上传文件
      */
-    @PreAuthorize("@ss.hasPermi('system:sysFileInfo:export')")
-    @Log(title = "文件信息", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysFileInfo sysFileInfo)
-    {
-        List<SysFileInfo> list = sysFileInfoService.selectSysFileInfoList(sysFileInfo);
-        ExcelUtil<SysFileInfo> util = new ExcelUtil<SysFileInfo>(SysFileInfo.class);
-        util.exportExcel(response, list, "文件信息数据");
-    }
-
-    /**
-     * 获取文件信息详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:sysFileInfo:query')")
-    @GetMapping(value = "/{fileId}")
-    public AjaxResult getInfo(@PathVariable("fileId") Long fileId)
-    {
-        return success(sysFileInfoService.selectSysFileInfoByFileId(fileId));
-    }
-
-    /**
-     * 新增文件信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:sysFileInfo:add')")
-    @Log(title = "文件信息", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody SysFileInfo sysFileInfo)
-    {
-        return toAjax(sysFileInfoService.insertSysFileInfo(sysFileInfo));
-    }
-
-    /**
-     * 修改文件信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:sysFileInfo:edit')")
-    @Log(title = "文件信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody SysFileInfo sysFileInfo)
-    {
-        return toAjax(sysFileInfoService.updateSysFileInfo(sysFileInfo));
-    }
-
-    /**
-     * 删除文件信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:sysFileInfo:remove')")
-    @Log(title = "文件信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{fileIds}")
-    public AjaxResult remove(@PathVariable Long[] fileIds)
-    {
-        return toAjax(sysFileInfoService.deleteSysFileInfoByFileIds(fileIds));
+    @PreAuthorize("@ss.hasPermi('system:info:upload')")
+    @PostMapping("/upload")
+    public AjaxResult uploadImage(MultipartFile file) {
+//        String pathType = httpServletRequest.getParameter("pathType");
+        FileInfo fileInfo = fileStorageService.of(file)
+                .upload();  //将文件上传到对应地方
+        return AjaxResult.success(fileInfo);
     }
 }
