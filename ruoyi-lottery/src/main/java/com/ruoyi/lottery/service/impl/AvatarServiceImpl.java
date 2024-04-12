@@ -46,7 +46,7 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
     public List<Avatar> selectAvatarList(Avatar avatar)
     {
         List<Avatar> list = avatarMapper.selectAvatarList(avatar);
-        String url = sysParamService.getParamByKey("param_key");
+        String url = sysParamService.getParamByKey("resource_domain");
         list.forEach(a -> a.setAvatarImg(url + a.getAvatarImg()));
         return list;
     }

@@ -46,7 +46,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
     public List<Banner> selectBannerList(Banner banner)
     {
         List<Banner> list = bannerMapper.selectBannerList(banner);
-        String url = sysParamService.getParamByKey("param_key");
+        String url = sysParamService.getParamByKey("resource_domain");
         list.forEach(b -> b.setImg(url + b.getImg()));
         return list;
     }
