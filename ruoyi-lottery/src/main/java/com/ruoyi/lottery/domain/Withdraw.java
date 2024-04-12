@@ -43,7 +43,7 @@ public class Withdraw extends BaseEntity
     private Date checkTime;
 
     /** 0:待审核 1:审核通过 2:拒绝提现 */
-    @Excel(name = "0:待审核 1:审核通过 2:拒绝提现")
+    @Excel(name = "审核结果", readConverterExp = "0=待审核,1=审核通过,2=拒绝提现")
     private Long status;
 
     /** 操作人 */
@@ -51,7 +51,7 @@ public class Withdraw extends BaseEntity
     private String operName;
 
     /** 1:银行卡 2:微信 3:支付宝 4:虚拟货币 */
-    @Excel(name = "1:银行卡 2:微信 3:支付宝 4:虚拟货币")
+    @Excel(name = "提现方式", readConverterExp = "1=银行卡,2=微信,3=支付宝,4=虚拟货币")
     private Long accountType;
 
     /** 用户收款信息详情 */

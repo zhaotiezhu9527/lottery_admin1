@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.AvatarMapper;
@@ -20,6 +21,8 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
 {
     @Autowired
     private AvatarMapper avatarMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询头像管理
@@ -42,7 +45,10 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
     @Override
     public List<Avatar> selectAvatarList(Avatar avatar)
     {
-        return avatarMapper.selectAvatarList(avatar);
+        List<Avatar> list = avatarMapper.selectAvatarList(avatar);
+        String url = sysParamService.getParamByKey("param_key");
+        list.forEach(a -> a.setAvatarImg(url + a.getAvatarImg()));
+        return list;
     }
 
     /**

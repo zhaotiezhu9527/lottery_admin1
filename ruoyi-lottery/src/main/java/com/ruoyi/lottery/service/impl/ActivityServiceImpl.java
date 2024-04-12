@@ -1,7 +1,10 @@
 package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.ActivityMapper;
@@ -20,6 +23,8 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
 {
     @Autowired
     private ActivityMapper activityMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询活动配置
@@ -42,7 +47,10 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     @Override
     public List<Activity> selectActivityList(Activity activity)
     {
-        return activityMapper.selectActivityList(activity);
+        List<Activity> list = activityMapper.selectActivityList(activity);
+        String url = sysParamService.getParamByKey("resource_domain");
+        list = list.stream().map(a -> {a.setImg1(url + a.getImg1());a.setImg2(url + a.getImg2());return a;}).collect(Collectors.toList());
+        return list;
     }
 
     /**

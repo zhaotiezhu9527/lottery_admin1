@@ -44,11 +44,11 @@ public class TransactionRecord extends BaseEntity
     private BigDecimal afterAmount;
 
     /** 0:收入 1:支出 */
-    @Excel(name = "0:收入 1:支出")
+    @Excel(name = "账变类型", readConverterExp = "0=收入,1=支出")
     private Long payType;
 
     /** 0:充值 1:提现 2:下注 3:彩票奖金 4:彩票撤单 5:三方上分 6:三方下分 7:返水 8:优惠活动 9:后台入款 10:后台扣款 11:彩票和局退还 */
-    @Excel(name = "0:充值 1:提现 2:下注 3:彩票奖金 4:彩票撤单 5:三方上分 6:三方下分 7:返水 8:优惠活动 9:后台入款 10:后台扣款 11:彩票和局退还")
+    @Excel(readConverterExp = "0=充值,1=提现,2=下注,3=彩票奖金,4=彩票撤单,5=三方上分,6=三方下分,7=返水,8=优惠活动,9=后台入款,10=后台扣款,11=彩票和局退还", name = "业务类型")
     private Long businessType;
 
     /** 业务订单号 */

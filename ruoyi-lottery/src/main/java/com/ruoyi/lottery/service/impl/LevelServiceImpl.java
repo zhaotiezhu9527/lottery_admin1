@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.LevelMapper;
@@ -20,6 +21,8 @@ public class LevelServiceImpl extends ServiceImpl<LevelMapper, Level> implements
 {
     @Autowired
     private LevelMapper levelMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询等级管理
@@ -42,7 +45,10 @@ public class LevelServiceImpl extends ServiceImpl<LevelMapper, Level> implements
     @Override
     public List<Level> selectLevelList(Level level)
     {
-        return levelMapper.selectLevelList(level);
+        List<Level> list = levelMapper.selectLevelList(level);
+        String url = sysParamService.getParamByKey("resource_domain");
+        list.forEach(l -> l.setLevelImg(url + l.getLevelImg()));
+        return list;
     }
 
     /**

@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -71,7 +72,7 @@ public class SysParamServiceImpl extends ServiceImpl<SysParamMapper, SysParam> i
      * @return 结果
      */
     @Override
-    @CacheEvict(value = "sysParam", key = "#sysParam.paramKey")
+    @CacheEvict(value = CacheConstants.SYS_PARAM)
     public int updateSysParam(SysParam sysParam)
     {
         sysParam.setUpdateTime(DateUtils.getNowDate());
@@ -85,7 +86,7 @@ public class SysParamServiceImpl extends ServiceImpl<SysParamMapper, SysParam> i
      * @return 结果
      */
     @Override
-    @CacheEvict(value = "sysParam")
+    @CacheEvict(value = CacheConstants.SYS_PARAM)
     public int deleteSysParamByIds(Long[] ids)
     {
         return sysParamMapper.deleteSysParamByIds(ids);
@@ -98,13 +99,11 @@ public class SysParamServiceImpl extends ServiceImpl<SysParamMapper, SysParam> i
      * @return 结果
      */
     @Override
-    @CacheEvict(value = "sysParam")
     public int deleteSysParamById(Long id)
     {
         return sysParamMapper.deleteSysParamById(id);
     }
 
-    @Cacheable(value = "sysParam", key = "#key")
     @Override
     public String getParamByKey(String key) {
         LambdaQueryWrapper<SysParam> wr = new LambdaQueryWrapper<>();

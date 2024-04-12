@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.BannerMapper;
@@ -20,6 +21,8 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
 {
     @Autowired
     private BannerMapper bannerMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询banner管理
@@ -42,7 +45,10 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
     @Override
     public List<Banner> selectBannerList(Banner banner)
     {
-        return bannerMapper.selectBannerList(banner);
+        List<Banner> list = bannerMapper.selectBannerList(banner);
+        String url = sysParamService.getParamByKey("param_key");
+        list.forEach(b -> b.setImg(url + b.getImg()));
+        return list;
     }
 
     /**
