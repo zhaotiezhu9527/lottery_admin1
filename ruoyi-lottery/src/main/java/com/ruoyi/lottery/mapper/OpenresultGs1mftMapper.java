@@ -1,0 +1,62 @@
+package com.ruoyi.lottery.mapper;
+
+import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.lottery.domain.OpenresultGs1mft;
+
+/**
+ * 1分飞艇开奖Mapper接口
+ * 
+ * @author hardy
+ * @date 2024-04-12
+ */
+public interface OpenresultGs1mftMapper extends BaseMapper<OpenresultGs1mft>
+{
+    /**
+     * 查询1分飞艇开奖
+     * 
+     * @param id 1分飞艇开奖主键
+     * @return 1分飞艇开奖
+     */
+    public OpenresultGs1mft selectOpenresultGs1mftById(Long id);
+
+    /**
+     * 查询1分飞艇开奖列表
+     * 
+     * @param openresultGs1mft 1分飞艇开奖
+     * @return 1分飞艇开奖集合
+     */
+    public List<OpenresultGs1mft> selectOpenresultGs1mftList(OpenresultGs1mft openresultGs1mft);
+
+    /**
+     * 新增1分飞艇开奖
+     * 
+     * @param openresultGs1mft 1分飞艇开奖
+     * @return 结果
+     */
+    public int insertOpenresultGs1mft(OpenresultGs1mft openresultGs1mft);
+
+    /**
+     * 修改1分飞艇开奖
+     * 
+     * @param openresultGs1mft 1分飞艇开奖
+     * @return 结果
+     */
+    public int updateOpenresultGs1mft(OpenresultGs1mft openresultGs1mft);
+
+    /**
+     * 删除1分飞艇开奖
+     * 
+     * @param id 1分飞艇开奖主键
+     * @return 结果
+     */
+    public int deleteOpenresultGs1mftById(Long id);
+
+    /**
+     * 批量删除1分飞艇开奖
+     * 
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteOpenresultGs1mftByIds(Long[] ids);
+}
