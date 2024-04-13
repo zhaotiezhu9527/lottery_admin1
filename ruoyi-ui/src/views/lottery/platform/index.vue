@@ -282,6 +282,7 @@ export default {
         this.form.platName = response.data.platName;
         this.form.subPlatName = response.data.subPlatName;
         this.form.img1 = response.data.img1;
+        this.form.ratio = response.data.ratio;
         this.form.remark = response.data.remark;
         this.form.pxh = response.data.pxh;
         this.form.maintenanceMsg = response.data.maintenanceMsg;

@@ -17,45 +17,36 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="收支" prop="payType">
+        <el-select v-model="queryParams.payType" placeholder="请选择">
+          <el-option
+            v-for="item in shouzhiList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="操作前余额" prop="beforeAmount">
-        <el-input
-          v-model="queryParams.beforeAmount"
-          placeholder="请输入操作前余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="类型" prop="businessType">
+        <el-select v-model="queryParams.businessType" placeholder="请选择">
+          <el-option
+            v-for="item in moneyTypeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="操作后余额" prop="afterAmount">
-        <el-input
-          v-model="queryParams.afterAmount"
-          placeholder="请输入操作后余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="业务订单号" prop="businessOrder">
-        <el-input
-          v-model="queryParams.businessOrder"
-          placeholder="请输入业务订单号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="操作人(前台业务可以不写)" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          placeholder="请输入操作人(前台业务可以不写)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="订单时间" prop="orderTime">
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 340px"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -66,38 +57,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['lottery:transactionRecord:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:transactionRecord:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:transactionRecord:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -106,31 +65,42 @@
           v-hasPermi="['lottery:transactionRecord:export']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="transactionRecordList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="transactionRecordList" >
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="流水号" align="center" prop="trxId" />
       <el-table-column label="金额" align="center" prop="amount" />
       <el-table-column label="操作前余额" align="center" prop="beforeAmount" />
       <el-table-column label="操作后余额" align="center" prop="afterAmount" />
-      <el-table-column label="0:收入 1:支出" align="center" prop="payType" />
-      <el-table-column label="0:充值 1:提现 2:下注 3:彩票奖金 4:彩票撤单 5:三方上分 6:三方下分 7:返水 8:优惠活动 9:后台入款 10:后台扣款 11:彩票和局退还" align="center" prop="businessType" />
+      <el-table-column label="收支" align="center" prop="payType" >
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.payType === 1">支出</el-tag>
+          <el-tag type="danger" v-else-if="scope.row.payType === 0">收入</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" align="center" prop="businessType" >
+        <template slot-scope="scope">
+          <div v-if="scope.row.businessType === 0">充值</div>
+          <div v-else-if="scope.row.businessType === 1">提现</div>
+          <div v-else-if="scope.row.businessType === 2">彩票投注</div>
+          <div v-else-if="scope.row.businessType === 3">彩票奖金</div>
+          <div v-else-if="scope.row.businessType === 4">彩票撤单</div>
+          <div v-else-if="scope.row.businessType === 5">额度转入</div>
+          <div v-else-if="scope.row.businessType === 6">额度转出</div>
+          <div v-else-if="scope.row.businessType === 7">返水</div>
+          <div v-else-if="scope.row.businessType === 8">优惠活动</div>
+          <div v-else-if="scope.row.businessType === 9">后台入款</div>
+          <div v-else-if="scope.row.businessType === 10">后台扣款</div>
+          <div v-else-if="scope.row.businessType === 11">彩票和局退还</div>
+        </template>
+      </el-table-column>
       <el-table-column label="业务订单号" align="center" prop="businessOrder" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作人(前台业务可以不写)" align="center" prop="operName" />
+      <el-table-column label="操作人" align="center" prop="operName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['lottery:transactionRecord:edit']"
-          >修改</el-button>
           <el-button
             size="mini"
             type="text"
@@ -149,45 +119,12 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改账变记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入用户名" />
-        </el-form-item>
-        <el-form-item label="流水号" prop="trxId">
-          <el-input v-model="form.trxId" placeholder="请输入流水号" />
-        </el-form-item>
-        <el-form-item label="金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入金额" />
-        </el-form-item>
-        <el-form-item label="操作前余额" prop="beforeAmount">
-          <el-input v-model="form.beforeAmount" placeholder="请输入操作前余额" />
-        </el-form-item>
-        <el-form-item label="操作后余额" prop="afterAmount">
-          <el-input v-model="form.afterAmount" placeholder="请输入操作后余额" />
-        </el-form-item>
-        <el-form-item label="业务订单号" prop="businessOrder">
-          <el-input v-model="form.businessOrder" placeholder="请输入业务订单号" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="操作人(前台业务可以不写)" prop="operName">
-          <el-input v-model="form.operName" placeholder="请输入操作人(前台业务可以不写)" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listTransactionRecord, getTransactionRecord, delTransactionRecord, addTransactionRecord, updateTransactionRecord } from "@/api/lottery/transactionRecord";
+import { listTransactionRecord, delTransactionRecord } from "@/api/lottery/transactionRecord";
+import { dateFormat } from '@/utils/auth'
 
 export default {
   name: "TransactionRecord",
@@ -195,12 +132,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -214,16 +145,13 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         userName: null,
         trxId: null,
-        amount: null,
-        beforeAmount: null,
-        afterAmount: null,
-        payType: null,
-        businessType: null,
-        businessOrder: null,
-        operName: null
+        payType: "",
+        businessType: "",
+        isAsc:'desc',
+        orderByColumn:'create_time'
       },
       // 表单参数
       form: {},
@@ -232,17 +160,40 @@ export default {
         userName: [
           { required: true, message: "用户名不能为空", trigger: "blur" }
         ],
-      }
+      },
+      shouzhiList: [
+        { label: '全部', value: ''},
+        { label: '收入', value: 0},
+        { label: '支出', value: 1},
+      ],//状态
+      moneyTypeList: [
+        { label: '全部', value: ''},
+        { label: '充值', value: 0},
+        { label: '提现', value: 1},
+        { label: '彩票投注', value: 2},
+        { label: '彩票奖金', value: 3},
+        { label: '彩票撤单', value: 4},
+        { label: '额度转入', value: 5},
+        { label: '额度转出', value: 6},
+        { label: '返水', value: 7},
+        { label: '优惠活动', value: 8},
+        { label: '后台入款', value: 9},
+        { label: '后台扣款', value: 10},
+        { label: '彩票和局退款', value: 11},
+      ],//状态
+      // 时间
+      dateRange:[],
     };
   },
   created() {
+    this.getDefaultTime();
     this.getList();
   },
   methods: {
     /** 查询账变记录列表 */
     getList() {
       this.loading = true;
-      listTransactionRecord(this.queryParams).then(response => {
+      listTransactionRecord(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.transactionRecordList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -259,15 +210,8 @@ export default {
         id: null,
         userName: null,
         trxId: null,
-        amount: null,
-        beforeAmount: null,
-        afterAmount: null,
         payType: null,
         businessType: null,
-        businessOrder: null,
-        createTime: null,
-        remark: null,
-        operName: null
       };
       this.resetForm("form");
     },
@@ -280,48 +224,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加账变记录";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getTransactionRecord(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改账变记录";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateTransactionRecord(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addTransactionRecord(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -338,7 +240,14 @@ export default {
       this.download('lottery/transactionRecord/export', {
         ...this.queryParams
       }, `transactionRecord_${new Date().getTime()}.xlsx`)
-    }
+    },
+    getDefaultTime() {
+      let end = new Date();
+      let start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+      this.dateRange[0] = dateFormat("YYYY-mm-dd" , end) + ' 00:00:00'
+      this.dateRange[1] = dateFormat("YYYY-mm-dd" , end) + ' 23:59:59'
+    },
   }
 };
 </script>
