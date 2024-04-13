@@ -170,6 +170,7 @@ export default {
           { required: true, message: "活动标题不能为空", trigger: "blur" }
         ],
       },
+      resourceDomain:"",//域名
       // 上传参数
       upload: {
         // 是否禁用上传
@@ -303,7 +304,7 @@ export default {
       // this.open = false
     },
      // 获取域名
-     getCookie() {
+    getCookie() {
       this.resourceDomain = Cookies.get("resourceDomain");
     },
     // 停启用状态
