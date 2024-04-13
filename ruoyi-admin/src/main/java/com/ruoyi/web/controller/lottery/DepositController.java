@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.lottery;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.lottery.business.CheckBusiness;
+import com.ruoyi.lottery.pojo.DepositCheckDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +36,9 @@ public class DepositController extends BaseController
 {
     @Autowired
     private IDepositService depositService;
+
+    @Autowired
+    private CheckBusiness checkBusiness;
 
     /**
      * 查询充值订单列表
@@ -100,5 +106,21 @@ public class DepositController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(depositService.deleteDepositByIds(ids));
+    }
+
+
+    @PreAuthorize("@ss.hasPermi('lottery:deposit:check')")
+    @Log(title = "充值审核", businessType = BusinessType.UPDATE)
+    @PostMapping("/check")
+    public AjaxResult check(@RequestBody DepositCheckDto request) throws Exception {
+        Deposit deposit = depositService.getById(request.getId());
+        if (deposit == null) {
+            return error("订单号不存在.");
+        }
+        if (deposit.getStatus().intValue() != 0) {
+            return error("该订单已被审核.");
+        }
+        checkBusiness.depositCheck(request, deposit);
+        return success();
     }
 }

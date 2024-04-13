@@ -1,6 +1,10 @@
 package com.ruoyi.lottery.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +104,18 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public int deleteUserInfoById(Long id)
     {
         return userInfoMapper.deleteUserInfoById(id);
+    }
+
+    @Override
+    public void updateUserBalance(String userName, BigDecimal balance) throws ServiceException {
+        int updateUserBalance = userInfoMapper.updateUserBalance(userName, balance);
+        if (updateUserBalance <= 0) {
+            throw new ServiceException("修改用户余额失败.");
+        }
+    }
+
+    @Override
+    public UserInfo getUserByName(String userName) {
+        return getOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUserName, userName));
     }
 }
