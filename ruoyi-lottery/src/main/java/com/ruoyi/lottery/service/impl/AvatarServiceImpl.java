@@ -33,7 +33,10 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
     @Override
     public Avatar selectAvatarById(Long id)
     {
-        return avatarMapper.selectAvatarById(id);
+        Avatar avatar = avatarMapper.selectAvatarById(id);
+        String url = sysParamService.getParamByKey("resource_domain");
+        avatar.setAvatarImg(url + avatar.getAvatarImg());
+        return avatar;
     }
 
     /**

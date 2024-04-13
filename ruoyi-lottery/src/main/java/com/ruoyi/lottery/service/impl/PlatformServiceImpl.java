@@ -33,7 +33,10 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
     @Override
     public Platform selectPlatformById(Long id)
     {
-        return platformMapper.selectPlatformById(id);
+        Platform platform = platformMapper.selectPlatformById(id);
+        String url = sysParamService.getParamByKey("resource_domain");
+        platform.setImg1(url + platform.getImg1());
+        return platform;
     }
 
     /**
