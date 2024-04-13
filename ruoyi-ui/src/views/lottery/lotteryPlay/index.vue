@@ -140,8 +140,8 @@
         <el-form-item label="盘口代码" prop="handicapCode">
           <el-input v-model="form.handicapCode" placeholder="请输入盘口代码" />
         </el-form-item>
-        <el-form-item label="玩法提示" prop="wfts">
-          <el-input v-model="form.wfts" placeholder="请输入玩法提示" />
+        <el-form-item label="玩法提示">
+          <editor v-model="form.wfts" :min-height="192"/>
         </el-form-item>
         <el-form-item label="中奖说明" prop="zjsm">
           <el-input v-model="form.zjsm" placeholder="请输入中奖说明" />
