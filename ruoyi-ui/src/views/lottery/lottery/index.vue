@@ -1,14 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="彩种代码" prop="lotteryCode">
-        <el-input
-          v-model="queryParams.lotteryCode"
-          placeholder="请输入彩种代码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="彩种名称" prop="lotteryName">
         <el-input
           v-model="queryParams.lotteryName"
@@ -17,138 +10,54 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="9:00-23:50(全天开奖不用填)" prop="dayOpen">
-        <el-input
-          v-model="queryParams.dayOpen"
-          placeholder="请输入9:00-23:50(全天开奖不用填)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="彩种图标" prop="img">
-        <el-input
-          v-model="queryParams.img"
-          placeholder="请输入彩种图标"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提前封盘时间" prop="closeTime">
-        <el-input
-          v-model="queryParams.closeTime"
-          placeholder="请输入提前封盘时间"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="排序号(值越大越靠前)" prop="pxh">
-        <el-input
-          v-model="queryParams.pxh"
-          placeholder="请输入排序号(值越大越靠前)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="一天多少期" prop="dayCount">
-        <el-input
-          v-model="queryParams.dayCount"
-          placeholder="请输入一天多少期"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="第一期开奖时间" prop="firstQsTime">
-        <el-input
-          v-model="queryParams.firstQsTime"
-          placeholder="请输入第一期开奖时间"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="多少分钟一期" prop="qsTime">
-        <el-input
-          v-model="queryParams.qsTime"
-          placeholder="请输入多少分钟一期"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="昨天最后一期期号" prop="yesterdayQs">
-        <el-input
-          v-model="queryParams.yesterdayQs"
-          placeholder="请输入昨天最后一期期号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="类型">
+        <el-select v-model="queryParams.lotteryType" placeholder="请选择">
+          <el-option
+            v-for="item in typeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['lottery:lottery:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:lottery:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:lottery:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['lottery:lottery:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-    <el-table v-loading="loading" :data="lotteryList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="lotteryList" >
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="彩种代码" align="center" prop="lotteryCode" />
       <el-table-column label="彩种名称" align="center" prop="lotteryName" />
-      <el-table-column label="9:00-23:50(全天开奖不用填)" align="center" prop="dayOpen" />
-      <el-table-column label="0:启用 1:停用" align="center" prop="status" />
-      <el-table-column label="彩种图标" align="center" prop="img" />
-      <el-table-column label="提前封盘时间" align="center" prop="closeTime" />
+      <el-table-column label="彩种图标" align="center" prop="img">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.img" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" align="center" prop="lotteryType" >
+        <template slot-scope="scope">
+          <div v-if="scope.row.lotteryType === 1">快三</div>
+          <div v-else-if="scope.row.lotteryType === 2">时时彩</div>
+          <div v-else-if="scope.row.lotteryType === 3">PK10</div>
+          <div v-else-if="scope.row.lotteryType === 4">六合彩</div>
+          <div v-else-if="scope.row.lotteryType === 5">PC蛋蛋</div>
+          <div v-else-if="scope.row.lotteryType === 6">十一选五</div>
+          <div v-else-if="scope.row.lotteryType === 8">快乐八</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="排序号(值越大越靠前)" align="center" prop="pxh" />
-      <el-table-column label="1:快3 2:时时彩 3:PK10 4:六合彩 5:PC蛋蛋 6:11选5 7:福彩3D 8:快乐8" align="center" prop="lotteryType" />
-      <el-table-column label="一天多少期" align="center" prop="dayCount" />
-      <el-table-column label="第一期开奖时间" align="center" prop="firstQsTime" />
-      <el-table-column label="多少分钟一期" align="center" prop="qsTime" />
-      <el-table-column label="昨天最后一期期号" align="center" prop="yesterdayQs" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -180,38 +89,27 @@
     <!-- 添加或修改彩种管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="彩种代码" prop="lotteryCode">
-          <el-input v-model="form.lotteryCode" placeholder="请输入彩种代码" />
-        </el-form-item>
         <el-form-item label="彩种名称" prop="lotteryName">
           <el-input v-model="form.lotteryName" placeholder="请输入彩种名称" />
         </el-form-item>
-        <el-form-item label="9:00-23:50(全天开奖不用填)" prop="dayOpen">
-          <el-input v-model="form.dayOpen" placeholder="请输入9:00-23:50(全天开奖不用填)" />
+        <el-form-item label="图标" prop="img" v-loading="loading">
+          <el-upload
+              class="avatar-uploader"
+              :action="upload.url"
+              :file-list="upload.fileList"
+              :headers="upload.headers"
+              :show-file-list="false"
+              :on-success="successHandle"
+              :before-upload="beforeUploadHandle">
+              <img v-if="form.img" :src="resourceDomain + form.img" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
         </el-form-item>
-        <el-form-item label="彩种图标" prop="img">
-          <el-input v-model="form.img" placeholder="请输入彩种图标" />
-        </el-form-item>
-        <el-form-item label="提前封盘时间" prop="closeTime">
-          <el-input v-model="form.closeTime" placeholder="请输入提前封盘时间" />
+        <el-form-item label="排序号" prop="pxh">
+          <el-input v-model="form.pxh" placeholder="请输入排序号(值越大越靠前)" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="排序号(值越大越靠前)" prop="pxh">
-          <el-input v-model="form.pxh" placeholder="请输入排序号(值越大越靠前)" />
-        </el-form-item>
-        <el-form-item label="一天多少期" prop="dayCount">
-          <el-input v-model="form.dayCount" placeholder="请输入一天多少期" />
-        </el-form-item>
-        <el-form-item label="第一期开奖时间" prop="firstQsTime">
-          <el-input v-model="form.firstQsTime" placeholder="请输入第一期开奖时间" />
-        </el-form-item>
-        <el-form-item label="多少分钟一期" prop="qsTime">
-          <el-input v-model="form.qsTime" placeholder="请输入多少分钟一期" />
-        </el-form-item>
-        <el-form-item label="昨天最后一期期号" prop="yesterdayQs">
-          <el-input v-model="form.yesterdayQs" placeholder="请输入昨天最后一期期号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -224,6 +122,8 @@
 
 <script>
 import { listLottery, getLottery, delLottery, addLottery, updateLottery } from "@/api/lottery/lottery";
+import Cookies from "js-cookie";
+import { getToken } from "@/utils/auth"; 
 
 export default {
   name: "Lottery",
@@ -251,18 +151,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        lotteryCode: null,
         lotteryName: null,
-        dayOpen: null,
-        status: null,
-        img: null,
-        closeTime: null,
-        pxh: null,
-        lotteryType: null,
-        dayCount: null,
-        firstQsTime: null,
-        qsTime: null,
-        yesterdayQs: null
+        lotteryType: "",
       },
       // 表单参数
       form: {},
@@ -271,11 +161,34 @@ export default {
         lotteryCode: [
           { required: true, message: "彩种代码不能为空", trigger: "blur" }
         ],
-      }
+      },
+      typeList: [
+        { label: '全部', value: ''},
+        { label: '快三', value: 1},
+        { label: '时时彩', value: 2},
+        { label: 'PK10', value: 3},
+        { label: '六合彩', value: 4},
+        { label: 'PC蛋蛋', value: 5},
+        { label: '快乐八', value: 6},
+        { label: '十一选五', value: 8},
+      ],//状态
+      resourceDomain:"",//域名
+      // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/system/sysFileInfo/upload?pathType=2",
+        // 上传的文件列表
+        fileList: []
+      },
     };
   },
   created() {
     this.getList();
+    this.getCookie()
   },
   methods: {
     /** 查询彩种管理列表 */
@@ -296,21 +209,8 @@ export default {
     reset() {
       this.form = {
         id: null,
-        lotteryCode: null,
         lotteryName: null,
-        dayOpen: null,
-        status: null,
-        img: null,
-        closeTime: null,
-        createTime: null,
-        updateTime: null,
-        remark: null,
-        pxh: null,
-        lotteryType: null,
-        dayCount: null,
-        firstQsTime: null,
-        qsTime: null,
-        yesterdayQs: null
+        lotteryType: "",
       };
       this.resetForm("form");
     },
@@ -324,12 +224,6 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
@@ -341,7 +235,11 @@ export default {
       this.reset();
       const id = row.id || this.ids
       getLottery(id).then(response => {
-        this.form = response.data;
+        this.form.id = response.data.id;
+        this.form.lotteryName = response.data.lotteryName;
+        this.form.img = response.data.img;
+        this.form.pxh = response.data.pxh;
+        this.form.remark = response.data.remark;
         this.open = true;
         this.title = "修改彩种管理";
       });
@@ -381,7 +279,39 @@ export default {
       this.download('lottery/lottery/export', {
         ...this.queryParams
       }, `lottery_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 获取域名
+    getCookie() {
+      this.resourceDomain = Cookies.get("resourceDomain");
+    },
+    // 停启用状态
+    changeStatus(id,status){
+      updateLottery({
+        id:id,
+        status:status,
+      }).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
+    beforeUploadHandle (file) {
+      this.open = true
+      this.loading = true
+      if (file.type !== 'image/jpg' && file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+        this.$message.error('只支持jpg、png、gif格式的图片！')
+        return false
+      }
+    },
+    // 上传成功
+    successHandle (response, file, fileList) {
+      this.fileList = fileList
+      if (response && response.code === 200) {
+        this.loading = false
+        this.form.img = response.data ;
+      } else {
+        // this.$message.error(response.msg)
+      }
+      // this.open = false
+    },
   }
 };
 </script>

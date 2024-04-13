@@ -1,43 +1,5 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="标题" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          placeholder="请输入标题"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="banner图" prop="img">
-        <el-input
-          v-model="queryParams.img"
-          placeholder="请输入banner图"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="排序号" prop="pxh">
-        <el-input
-          v-model="queryParams.pxh"
-          placeholder="请输入排序号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="操作人" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          placeholder="请输入操作人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -50,48 +12,30 @@
           v-hasPermi="['lottery:banner:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:banner:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:banner:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['lottery:banner:export']"
-        >导出</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="bannerList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="bannerList">
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="banner图" align="center" prop="img" />
+      <el-table-column label="图片（点击放大查看详情）" align="center" prop="img">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.img" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="排序号" align="center" prop="pxh" />
-      <el-table-column label="0:启用 1:停用" align="center" prop="status" />
       <el-table-column label="操作人" align="center" prop="operName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -127,14 +71,21 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
-        <el-form-item label="banner图" prop="img">
-          <el-input v-model="form.img" placeholder="请输入banner图" />
+        <el-form-item label="图片" prop="img" v-loading="loading">
+          <el-upload
+              class="avatar-uploader"
+              :action="upload.url"
+              :file-list="upload.fileList"
+              :headers="upload.headers"
+              :show-file-list="false"
+              :on-success="successHandle"
+              :before-upload="beforeUploadHandle">
+              <img v-if="form.img" :src="resourceDomain + form.img" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
         </el-form-item>
         <el-form-item label="排序号" prop="pxh">
           <el-input v-model="form.pxh" placeholder="请输入排序号" />
-        </el-form-item>
-        <el-form-item label="操作人" prop="operName">
-          <el-input v-model="form.operName" placeholder="请输入操作人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -147,6 +98,8 @@
 
 <script>
 import { listBanner, getBanner, delBanner, addBanner, updateBanner } from "@/api/lottery/banner";
+import Cookies from "js-cookie";
+import { getToken } from "@/utils/auth"; 
 
 export default {
   name: "Banner",
@@ -154,12 +107,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -174,21 +121,29 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        title: null,
-        img: null,
-        pxh: null,
-        status: null,
-        operName: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      resourceDomain:"",//域名
+      // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/system/sysFileInfo/upload?pathType=3",
+        // 上传的文件列表
+        fileList: []
+      },
     };
   },
   created() {
     this.getList();
+    this.getCookie()
   },
   methods: {
     /** 查询banner管理列表 */
@@ -208,14 +163,6 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
-        title: null,
-        img: null,
-        createTime: null,
-        updateTime: null,
-        pxh: null,
-        status: null,
-        operName: null
       };
       this.resetForm("form");
     },
@@ -229,26 +176,23 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加banner管理";
+      this.title = "添加";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id 
       getBanner(id).then(response => {
-        this.form = response.data;
+        this.form.id = response.data.id;
+        this.form.img = response.data.img;
+        this.form.title = response.data.title;
+        this.form.pxh = response.data.pxh;
         this.open = true;
-        this.title = "修改banner管理";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
@@ -286,7 +230,39 @@ export default {
       this.download('lottery/banner/export', {
         ...this.queryParams
       }, `banner_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 停启用状态
+    changeStatus(id,status){
+      updateBanner({
+        id:id,
+        status:status,
+      }).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
+    // 获取域名
+    getCookie() {
+      this.resourceDomain = Cookies.get("resourceDomain");
+    },
+    beforeUploadHandle (file) {
+      this.open = true
+      this.loading = true
+      if (file.type !== 'image/jpg' && file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+        this.$message.error('只支持jpg、png、gif格式的图片！')
+        return false
+      }
+    },
+    // 上传成功
+    successHandle (response, file, fileList) {
+      this.fileList = fileList
+      if (response && response.code === 200) {
+        this.loading = false
+        this.form.img = response.data ;
+      } else {
+        // this.$message.error(response.msg)
+      }
+      // this.open = false
+    },
   }
 };
 </script>
