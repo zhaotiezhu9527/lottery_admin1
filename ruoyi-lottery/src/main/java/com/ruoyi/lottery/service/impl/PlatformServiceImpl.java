@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.lottery.service.ISysParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.PlatformMapper;
@@ -20,6 +21,8 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
 {
     @Autowired
     private PlatformMapper platformMapper;
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询平台管理
@@ -42,7 +45,10 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
     @Override
     public List<Platform> selectPlatformList(Platform platform)
     {
-        return platformMapper.selectPlatformList(platform);
+        List<Platform> list = platformMapper.selectPlatformList(platform);
+        String url = sysParamService.getParamByKey("resource_domain");
+        list.forEach(p -> p.setImg1(url + p.getImg1()));
+        return list;
     }
 
     /**
