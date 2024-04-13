@@ -56,6 +56,11 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import { 
+  getNotice,
+  sysParamAll
+} from "@/api/menu";
+import Cookies from 'js-cookie'
 
 export default {
   components: {
@@ -66,7 +71,7 @@ export default {
     SizeSelect,
     Search,
     RuoYiGit,
-    RuoYiDoc
+    RuoYiDoc,
   },
   computed: {
     ...mapGetters([
@@ -91,6 +96,13 @@ export default {
       }
     }
   },
+  created() {
+    // this.getNotice();
+    // setInterval(() => {
+    //   this.getNotice();
+    // },15000)
+    this.getSysParamAll()
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -105,6 +117,27 @@ export default {
           location.href = '/index';
         })
       }).catch(() => {});
+    },
+    getNotice(){
+      getNotice().then(response => {
+        if(response.data){
+            this.withdrawCount = response.data.withdrawCount
+            this.rechargeCount = response.data.rechargeCount
+            if(this.rechargeCount){
+              this.$refs.mp3ru.play()
+            }else if(this.withdrawCount){
+              this.$refs.mp3chu.play()
+            }
+        }
+      });
+    },
+    // 获取配置信息
+    getSysParamAll(){
+      sysParamAll().then(response => {
+        if(response.data){
+          Cookies.set('resourceDomain', response.data.resourceDomain)
+        }
+      });
     }
   }
 }
