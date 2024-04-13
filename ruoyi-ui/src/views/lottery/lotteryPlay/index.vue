@@ -143,11 +143,11 @@
         <el-form-item label="玩法提示">
           <editor v-model="form.wfts" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="中奖说明" prop="zjsm">
-          <el-input v-model="form.zjsm" placeholder="请输入中奖说明" />
+        <el-form-item label="中奖说明">
+          <editor v-model="form.zjsm" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="范例" prop="fl">
-          <el-input v-model="form.fl" placeholder="请输入范例" />
+        <el-form-item label="范例">
+          <editor v-model="form.fl" :min-height="192"/>
         </el-form-item>
         <el-form-item label="排序号" prop="pxh">
           <el-input v-model="form.pxh" placeholder="请输入排序号" />
