@@ -54,6 +54,7 @@ public class BbinRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, BbinRecord bbinRecord)
     {
+        startOrderBy();
         List<BbinRecord> list = bbinRecordService.selectBbinRecordList(bbinRecord);
         ExcelUtil<BbinRecord> util = new ExcelUtil<BbinRecord>(BbinRecord.class);
         util.exportExcel(response, list, "三方注单(BBIN)数据");

@@ -54,6 +54,7 @@ public class PlatformController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Platform platform)
     {
+        startOrderBy();
         List<Platform> list = platformService.selectPlatformList(platform);
         ExcelUtil<Platform> util = new ExcelUtil<Platform>(Platform.class);
         util.exportExcel(response, list, "平台管理数据");

@@ -54,6 +54,7 @@ public class PlatRecordControlController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, PlatRecordControl platRecordControl)
     {
+        startOrderBy();
         List<PlatRecordControl> list = platRecordControlService.selectPlatRecordControlList(platRecordControl);
         ExcelUtil<PlatRecordControl> util = new ExcelUtil<PlatRecordControl>(PlatRecordControl.class);
         util.exportExcel(response, list, "拉单控制数据");

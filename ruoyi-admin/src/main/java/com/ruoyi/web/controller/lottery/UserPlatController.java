@@ -54,6 +54,7 @@ public class UserPlatController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, UserPlat userPlat)
     {
+        startOrderBy();
         List<UserPlat> list = userPlatService.selectUserPlatList(userPlat);
         ExcelUtil<UserPlat> util = new ExcelUtil<UserPlat>(UserPlat.class);
         util.exportExcel(response, list, "三方用户数据");

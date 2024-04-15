@@ -54,6 +54,7 @@ public class OpenresultJsk3Controller extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultJsk3 openresultJsk3)
     {
+        startOrderBy();
         List<OpenresultJsk3> list = openresultJsk3Service.selectOpenresultJsk3List(openresultJsk3);
         ExcelUtil<OpenresultJsk3> util = new ExcelUtil<OpenresultJsk3>(OpenresultJsk3.class);
         util.exportExcel(response, list, "开奖结果(江苏快3)数据");

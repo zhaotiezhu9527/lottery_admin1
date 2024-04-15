@@ -54,6 +54,7 @@ public class EduOrderController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EduOrder eduOrder)
     {
+        startOrderBy();
         List<EduOrder> list = eduOrderService.selectEduOrderList(eduOrder);
         ExcelUtil<EduOrder> util = new ExcelUtil<EduOrder>(EduOrder.class);
         util.exportExcel(response, list, "额度转换数据");

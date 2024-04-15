@@ -54,6 +54,7 @@ public class NoticeController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Notice notice)
     {
+        startOrderBy();
         List<Notice> list = noticeService.selectNoticeList(notice);
         ExcelUtil<Notice> util = new ExcelUtil<Notice>(Notice.class);
         util.exportExcel(response, list, "公告设置数据");

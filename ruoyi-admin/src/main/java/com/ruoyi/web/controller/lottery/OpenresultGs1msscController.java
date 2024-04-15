@@ -54,6 +54,7 @@ public class OpenresultGs1msscController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultGs1mssc openresultGs1mssc)
     {
+        startOrderBy();
         List<OpenresultGs1mssc> list = openresultGs1msscService.selectOpenresultGs1msscList(openresultGs1mssc);
         ExcelUtil<OpenresultGs1mssc> util = new ExcelUtil<OpenresultGs1mssc>(OpenresultGs1mssc.class);
         util.exportExcel(response, list, "开奖结果(gs1mssc)数据");

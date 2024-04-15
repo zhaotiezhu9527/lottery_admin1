@@ -54,6 +54,7 @@ public class OpenresultFc3dController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultFc3d openresultFc3d)
     {
+        startOrderBy();
         List<OpenresultFc3d> list = openresultFc3dService.selectOpenresultFc3dList(openresultFc3d);
         ExcelUtil<OpenresultFc3d> util = new ExcelUtil<OpenresultFc3d>(OpenresultFc3d.class);
         util.exportExcel(response, list, "开奖结果(福彩3D)数据");

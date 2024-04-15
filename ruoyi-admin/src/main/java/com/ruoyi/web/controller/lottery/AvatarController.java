@@ -54,6 +54,7 @@ public class AvatarController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Avatar avatar)
     {
+        startOrderBy();
         List<Avatar> list = avatarService.selectAvatarList(avatar);
         ExcelUtil<Avatar> util = new ExcelUtil<Avatar>(Avatar.class);
         util.exportExcel(response, list, "头像管理数据");

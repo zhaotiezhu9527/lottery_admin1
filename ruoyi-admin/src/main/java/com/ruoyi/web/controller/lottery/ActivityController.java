@@ -54,6 +54,7 @@ public class ActivityController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Activity activity)
     {
+        startOrderBy();
         List<Activity> list = activityService.selectActivityList(activity);
         ExcelUtil<Activity> util = new ExcelUtil<Activity>(Activity.class);
         util.exportExcel(response, list, "活动配置数据");

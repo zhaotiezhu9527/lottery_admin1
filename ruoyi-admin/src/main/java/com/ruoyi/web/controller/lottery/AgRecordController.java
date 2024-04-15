@@ -54,6 +54,7 @@ public class AgRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, AgRecord agRecord)
     {
+        startOrderBy();
         List<AgRecord> list = agRecordService.selectAgRecordList(agRecord);
         ExcelUtil<AgRecord> util = new ExcelUtil<AgRecord>(AgRecord.class);
         util.exportExcel(response, list, "AG注单数据");

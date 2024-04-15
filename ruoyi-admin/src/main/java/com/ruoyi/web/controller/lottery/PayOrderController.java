@@ -54,6 +54,7 @@ public class PayOrderController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, PayOrder payOrder)
     {
+        startOrderBy();
         List<PayOrder> list = payOrderService.selectPayOrderList(payOrder);
         ExcelUtil<PayOrder> util = new ExcelUtil<PayOrder>(PayOrder.class);
         util.exportExcel(response, list, "支付订单数据");

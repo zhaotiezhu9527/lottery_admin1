@@ -54,6 +54,7 @@ public class CompanyAccountController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, CompanyAccount companyAccount)
     {
+        startOrderBy();
         List<CompanyAccount> list = companyAccountService.selectCompanyAccountList(companyAccount);
         ExcelUtil<CompanyAccount> util = new ExcelUtil<CompanyAccount>(CompanyAccount.class);
         util.exportExcel(response, list, "公司入款账号数据");

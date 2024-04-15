@@ -54,6 +54,7 @@ public class sbRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, sbRecord sbRecord)
     {
+        startOrderBy();
         List<sbRecord> list = sbRecordService.selectsbRecordList(sbRecord);
         ExcelUtil<sbRecord> util = new ExcelUtil<sbRecord>(sbRecord.class);
         util.exportExcel(response, list, "沙巴体育注单数据");

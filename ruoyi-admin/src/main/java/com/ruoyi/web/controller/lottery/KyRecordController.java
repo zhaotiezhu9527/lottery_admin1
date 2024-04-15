@@ -54,6 +54,7 @@ public class KyRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, KyRecord kyRecord)
     {
+        startOrderBy();
         List<KyRecord> list = kyRecordService.selectKyRecordList(kyRecord);
         ExcelUtil<KyRecord> util = new ExcelUtil<KyRecord>(KyRecord.class);
         util.exportExcel(response, list, "开元注单数据");

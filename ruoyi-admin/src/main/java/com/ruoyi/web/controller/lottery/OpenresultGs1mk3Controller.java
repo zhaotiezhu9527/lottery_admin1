@@ -54,6 +54,7 @@ public class OpenresultGs1mk3Controller extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultGs1mk3 openresultGs1mk3)
     {
+        startOrderBy();
         List<OpenresultGs1mk3> list = openresultGs1mk3Service.selectOpenresultGs1mk3List(openresultGs1mk3);
         ExcelUtil<OpenresultGs1mk3> util = new ExcelUtil<OpenresultGs1mk3>(OpenresultGs1mk3.class);
         util.exportExcel(response, list, "开奖结果(GS1分快3)数据");

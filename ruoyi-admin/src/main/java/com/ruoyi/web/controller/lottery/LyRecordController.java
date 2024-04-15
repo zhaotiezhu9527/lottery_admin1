@@ -54,6 +54,7 @@ public class LyRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, LyRecord lyRecord)
     {
+        startOrderBy();
         List<LyRecord> list = lyRecordService.selectLyRecordList(lyRecord);
         ExcelUtil<LyRecord> util = new ExcelUtil<LyRecord>(LyRecord.class);
         util.exportExcel(response, list, "乐游注单数据");

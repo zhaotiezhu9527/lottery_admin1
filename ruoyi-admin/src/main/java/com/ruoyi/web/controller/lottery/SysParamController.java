@@ -72,6 +72,7 @@ public class SysParamController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysParam sysParam)
     {
+        startOrderBy();
         List<SysParam> list = sysParamService.selectSysParamList(sysParam);
         ExcelUtil<SysParam> util = new ExcelUtil<SysParam>(SysParam.class);
         util.exportExcel(response, list, "系统参数数据");

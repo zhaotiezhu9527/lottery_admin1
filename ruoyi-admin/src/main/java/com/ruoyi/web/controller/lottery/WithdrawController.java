@@ -62,6 +62,7 @@ public class WithdrawController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Withdraw withdraw)
     {
+        startOrderBy();
         List<Withdraw> list = withdrawService.selectWithdrawList(withdraw);
         ExcelUtil<Withdraw> util = new ExcelUtil<Withdraw>(Withdraw.class);
         util.exportExcel(response, list, "提现订单数据");

@@ -54,6 +54,7 @@ public class GroupController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Group group)
     {
+        startOrderBy();
         List<Group> list = groupService.selectGroupList(group);
         ExcelUtil<Group> util = new ExcelUtil<Group>(Group.class);
         util.exportExcel(response, list, "分组管理数据");

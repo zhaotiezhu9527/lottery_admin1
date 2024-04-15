@@ -54,6 +54,7 @@ public class LotteryPlayController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, LotteryPlay lotteryPlay)
     {
+        startOrderBy();
         List<LotteryPlay> list = lotteryPlayService.selectLotteryPlayList(lotteryPlay);
         ExcelUtil<LotteryPlay> util = new ExcelUtil<LotteryPlay>(LotteryPlay.class);
         util.exportExcel(response, list, "玩法管理数据");

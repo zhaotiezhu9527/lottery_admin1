@@ -54,6 +54,7 @@ public class EleGameController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EleGame eleGame)
     {
+        startOrderBy();
         List<EleGame> list = eleGameService.selectEleGameList(eleGame);
         ExcelUtil<EleGame> util = new ExcelUtil<EleGame>(EleGame.class);
         util.exportExcel(response, list, "游戏列表数据");

@@ -54,6 +54,7 @@ public class UserLoginLogController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, UserLoginLog userLoginLog)
     {
+        startOrderBy();
         List<UserLoginLog> list = userLoginLogService.selectUserLoginLogList(userLoginLog);
         ExcelUtil<UserLoginLog> util = new ExcelUtil<UserLoginLog>(UserLoginLog.class);
         util.exportExcel(response, list, "登录日志数据");

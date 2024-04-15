@@ -54,6 +54,7 @@ public class CompanyVirtualController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, CompanyVirtual companyVirtual)
     {
+        startOrderBy();
         List<CompanyVirtual> list = companyVirtualService.selectCompanyVirtualList(companyVirtual);
         ExcelUtil<CompanyVirtual> util = new ExcelUtil<CompanyVirtual>(CompanyVirtual.class);
         util.exportExcel(response, list, "公司U地址数据");
