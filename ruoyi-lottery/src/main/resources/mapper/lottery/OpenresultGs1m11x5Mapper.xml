@@ -33,6 +33,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openTime != null "> and open_time = #{openTime}</if>
             <if test="closeTime != null "> and close_time = #{closeTime}</if>
             <if test="openResultTime != null "> and open_result_time = #{openResultTime}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and open_result_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and open_result_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     

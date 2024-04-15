@@ -40,6 +40,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="merchantName != null  and merchantName != ''"> and merchant_name like concat('%', #{merchantName}, '%')</if>
             <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
             <if test="sign != null  and sign != ''"> and sign = #{sign}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and create_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and create_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     
