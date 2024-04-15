@@ -1,25 +1,20 @@
 package com.ruoyi.web.controller.lottery;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.lottery.domain.OpenresultGs1mssc;
 import com.ruoyi.lottery.service.IOpenresultGs1msscService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 开奖结果(gs1mssc)Controller
@@ -43,6 +38,13 @@ public class OpenresultGs1msscController extends BaseController
     {
         startPage();
         List<OpenresultGs1mssc> list = openresultGs1msscService.selectOpenresultGs1msscList(openresultGs1mssc);
+        Date now = new Date();
+        for (OpenresultGs1mssc result : list) {
+            if (now.getTime() < result.getOpenResultTime().getTime()) {
+                result.setOpenStatus(1L);
+                result.setOpenResult("");
+            }
+        }
         return getDataTable(list);
     }
 
