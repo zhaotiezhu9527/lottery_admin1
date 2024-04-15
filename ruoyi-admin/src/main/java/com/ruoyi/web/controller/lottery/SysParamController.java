@@ -95,6 +95,7 @@ public class SysParamController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysParam sysParam)
     {
+        sysParam.setOperName(getUsername());
         return toAjax(sysParamService.insertSysParam(sysParam));
     }
 
@@ -106,6 +107,7 @@ public class SysParamController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SysParam sysParam)
     {
+        sysParam.setOperName(getUsername());
         return toAjax(sysParamService.updateSysParam(sysParam));
     }
 

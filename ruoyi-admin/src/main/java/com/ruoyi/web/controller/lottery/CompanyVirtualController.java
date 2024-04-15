@@ -77,6 +77,7 @@ public class CompanyVirtualController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CompanyVirtual companyVirtual)
     {
+        companyVirtual.setOperName(getUsername());
         return toAjax(companyVirtualService.insertCompanyVirtual(companyVirtual));
     }
 
@@ -88,6 +89,7 @@ public class CompanyVirtualController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CompanyVirtual companyVirtual)
     {
+        companyVirtual.setOperName(getUsername());
         return toAjax(companyVirtualService.updateCompanyVirtual(companyVirtual));
     }
 

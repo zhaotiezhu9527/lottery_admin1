@@ -77,6 +77,7 @@ public class ActivityController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Activity activity)
     {
+        activity.setOperName(getUsername());
         return toAjax(activityService.insertActivity(activity));
     }
 
@@ -88,6 +89,7 @@ public class ActivityController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Activity activity)
     {
+        activity.setOperName(getUsername());
         return toAjax(activityService.updateActivity(activity));
     }
 

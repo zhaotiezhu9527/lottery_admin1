@@ -206,6 +206,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-lottery</module>
+        <module>ruoyi-api</module>
     </modules>
     <packaging>pom</packaging>
 

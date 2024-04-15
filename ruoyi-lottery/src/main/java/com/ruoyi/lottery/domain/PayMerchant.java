@@ -2,12 +2,10 @@ package com.ruoyi.lottery.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 商家配置对象 t_pay_merchant
@@ -53,4 +51,7 @@ public class PayMerchant extends BaseEntity
     @Excel(name = "支付网关地址")
     private String payUrl;
 
+    private String merchantId;
+
+    private String merchantKey;
 }

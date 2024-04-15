@@ -77,6 +77,7 @@ public class NoticeController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Notice notice)
     {
+        notice.setOperName(getUsername());
         return toAjax(noticeService.insertNotice(notice));
     }
 
@@ -88,6 +89,7 @@ public class NoticeController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Notice notice)
     {
+        notice.setOperName(getUsername());
         return toAjax(noticeService.updateNotice(notice));
     }
 
