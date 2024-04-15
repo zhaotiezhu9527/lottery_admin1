@@ -100,8 +100,8 @@
       </el-table-column>
       <el-table-column label="时间" prop="lastTime" width="200">
         <template slot-scope="scope">
-          <div>申请：{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')  || '- -'}}</div>
-          <div>审核：{{ parseTime(scope.row.checkTime, '{y}-{m}-{d} {h}:{i}:{s}')  || '- -'}}</div>
+          <div>申请：{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')  || '-'}}</div>
+          <div>审核：{{ parseTime(scope.row.checkTime, '{y}-{m}-{d} {h}:{i}:{s}')  || '-'}}</div>
         </template>
       </el-table-column>
       <el-table-column label="操作人" align="center" prop="operName" />

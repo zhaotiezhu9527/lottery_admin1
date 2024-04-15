@@ -42,3 +42,12 @@ export function delWithdraw(id) {
     method: 'delete'
   })
 }
+
+// 提现审核
+export function withdrawCheck(data) {
+  return request({
+    url: '/lottery/withdraw/check',
+    method: 'post',
+    data: data
+  })
+}
