@@ -1,7 +1,11 @@
 package com.ruoyi.web.controller.lottery;
+import com.google.common.collect.Maps;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -11,7 +15,9 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.lottery.business.OptMoneyBusiness;
 import com.ruoyi.lottery.domain.UserInfo;
 import com.ruoyi.lottery.pojo.OptUserMoneyDto;
+import com.ruoyi.lottery.service.ISysParamService;
 import com.ruoyi.lottery.service.IUserInfoService;
+import com.sun.jna.platform.win32.Winspool;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员列表Controller
@@ -37,6 +44,9 @@ public class UserInfoController extends BaseController
 
     @Autowired
     private OptMoneyBusiness optMoneyBusiness;
+
+    @Autowired
+    private ISysParamService sysParamService;
 
     /**
      * 查询会员列表列表
@@ -81,7 +91,49 @@ public class UserInfoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody UserInfo userInfo)
     {
-        return toAjax(userInfoService.insertUserInfo(userInfo));
+        // 校验用户名 密码 支付密码
+        boolean matchUserName = ReUtil.isMatch("^[a-zA-Z0-9]{4,12}$", userInfo.getUserName());
+        if (!matchUserName) {
+            return AjaxResult.error("请输入4-12位用户名");
+        }
+        boolean matchLoginPwd = ReUtil.isMatch("^[a-zA-Z0-9]{6,12}$", userInfo.getLoginPwd());
+        if (!matchLoginPwd) {
+            return AjaxResult.error("请输入6-12位登录密码");
+        }
+
+        UserInfo user2 = userInfoService.getUserByName(userInfo.getUserName());
+        if (user2 != null) {
+            return AjaxResult.error("该用户名已存在");
+        }
+
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+        String defaultAgent = allParamByMap.get("default_code");
+
+        UserInfo save = new UserInfo();
+        save.setUserName(userInfo.getUserName());
+        save.setNickName("");
+        save.setRealName("");
+        save.setBalance(new BigDecimal("0"));
+        save.setYebBalance(new BigDecimal("0"));
+        save.setYebInterest(new BigDecimal("0"));
+        save.setLoginPwd(SecureUtil.md5(userInfo.getLoginPwd()));
+        save.setPayPwd("");
+        save.setLoginStatus(0L);
+        save.setPayStatus(0L);
+        save.setUserPhone("");
+        save.setUserAgent(defaultAgent);
+        save.setReferralCode(RandomUtil.randomNumbers(6));
+        save.setAvatarId(1L);
+        save.setLevelId(1L);
+        save.setGroupId(1L);
+        save.setLastTime(new Date());
+        save.setLastIp("");
+        save.setRegisterIp("0.0.0.0");
+        save.setCreateTime(new Date());
+        save.setRemark("");
+        userInfoService.save(save);
+
+        return success();
     }
 
     /**

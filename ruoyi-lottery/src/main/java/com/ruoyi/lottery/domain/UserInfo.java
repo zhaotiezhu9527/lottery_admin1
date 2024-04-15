@@ -80,6 +80,10 @@ public class UserInfo extends BaseEntity
     @Excel(name = "邀请码")
     private String referralCode;
 
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
     /** 用户头像ID */
     private Long avatarId;
 

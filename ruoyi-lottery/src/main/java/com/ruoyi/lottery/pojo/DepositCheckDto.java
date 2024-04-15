@@ -14,4 +14,5 @@ public class DepositCheckDto {
     private String status;
 
     private String remark;
+
 }
