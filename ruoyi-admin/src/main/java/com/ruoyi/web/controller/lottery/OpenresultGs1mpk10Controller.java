@@ -91,6 +91,12 @@ public class OpenresultGs1mpk10Controller extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OpenresultGs1mpk10 openresultGs1mpk10)
     {
+        OpenresultGs1mpk10 result = openresultGs1mpk10Service.selectOpenresultGs1mpk10ById(openresultGs1mpk10.getId());
+        Date now = new Date();
+        if (now.getTime() >= result.getOpenResultTime().getTime()) {
+            return error("当前期已过开奖时间");
+        }
+        result.setOpenStatus(0L);
         return toAjax(openresultGs1mpk10Service.updateOpenresultGs1mpk10(openresultGs1mpk10));
     }
 
