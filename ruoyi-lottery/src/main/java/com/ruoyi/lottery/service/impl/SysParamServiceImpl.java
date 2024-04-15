@@ -1,7 +1,9 @@
 package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import cn.hutool.core.collection.CollStreamUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -110,5 +112,11 @@ public class SysParamServiceImpl extends ServiceImpl<SysParamMapper, SysParam> i
         wr.eq(SysParam::getParamKey, key);
         SysParam param = sysParamMapper.selectOne(wr);
         return param == null ? null : param.getParamValue();
+    }
+
+    @Override
+    public Map<String, String> getAllParamByMap() {
+        List<SysParam> list = list();
+        return CollStreamUtil.toMap(list, SysParam::getParamKey, SysParam::getParamValue);
     }
 }

@@ -2,6 +2,11 @@ package com.ruoyi.web.controller.lottery;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.lottery.business.CheckBusiness;
+import com.ruoyi.lottery.domain.Deposit;
+import com.ruoyi.lottery.pojo.DepositCheckDto;
+import com.ruoyi.lottery.pojo.WithdrawCheckDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +38,9 @@ public class WithdrawController extends BaseController
 {
     @Autowired
     private IWithdrawService withdrawService;
+
+    @Autowired
+    private CheckBusiness checkBusiness;
 
     /**
      * 查询提现订单列表
@@ -100,5 +108,20 @@ public class WithdrawController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(withdrawService.deleteWithdrawByIds(ids));
+    }
+
+    @PreAuthorize("@ss.hasPermi('lottery:deposit:check')")
+    @Log(title = "充值审核", businessType = BusinessType.UPDATE)
+    @PostMapping("/check")
+    public AjaxResult check(@RequestBody WithdrawCheckDto request) throws Exception {
+        Withdraw withdraw = withdrawService.getById(request.getId());
+        if (withdraw == null) {
+            return error("订单号不存在.");
+        }
+        if (withdraw.getStatus().intValue() != 0) {
+            return error("该订单已被审核.");
+        }
+        checkBusiness.withdrawCheck(request, withdraw);
+        return success();
     }
 }

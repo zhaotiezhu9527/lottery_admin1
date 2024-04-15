@@ -1,7 +1,11 @@
 package com.ruoyi.web.controller.lottery;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.Anonymous;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +48,20 @@ public class SysParamController extends BaseController
         startPage();
         List<SysParam> list = sysParamService.selectSysParamList(sysParam);
         return getDataTable(list);
+    }
+
+    /**
+     * 所有参数
+     * @return
+     */
+    @Anonymous
+    @GetMapping("/all")
+    public AjaxResult all()
+    {
+        Map<String, String> allParamByMap = sysParamService.getAllParamByMap();
+        Map<String, String> param = new HashMap<>();
+        param.put("resourceDomain", allParamByMap.get("resource_domain"));
+        return AjaxResult.success("操作成功!", param);
     }
 
     /**

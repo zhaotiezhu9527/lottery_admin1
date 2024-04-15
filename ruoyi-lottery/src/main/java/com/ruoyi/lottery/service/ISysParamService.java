@@ -1,6 +1,8 @@
 package com.ruoyi.lottery.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.lottery.domain.SysParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -61,4 +63,6 @@ public interface ISysParamService extends IService<SysParam>
     public int deleteSysParamById(Long id);
 
     public String getParamByKey(String key);
+
+    Map<String, String> getAllParamByMap();
 }

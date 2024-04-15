@@ -1,8 +1,10 @@
 package com.ruoyi.lottery.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.lottery.domain.UserInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 会员列表Mapper接口
@@ -59,4 +61,13 @@ public interface UserInfoMapper extends BaseMapper<UserInfo>
      * @return 结果
      */
     public int deleteUserInfoByIds(Long[] ids);
+
+
+    /**
+     * 修改用户余额
+     * @param userName 用户名
+     * @param balance 金额,扣除传负数
+     * @return
+     */
+    int updateUserBalance(@Param("userName") String userName, @Param("balance") BigDecimal balance);
 }

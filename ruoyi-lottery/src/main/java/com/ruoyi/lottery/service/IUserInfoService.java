@@ -1,8 +1,12 @@
 package com.ruoyi.lottery.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.lottery.domain.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 会员列表Service接口
@@ -59,4 +63,14 @@ public interface IUserInfoService extends IService<UserInfo>
      * @return 结果
      */
     public int deleteUserInfoById(Long id);
+
+    /**
+     * 修改用户余额
+     * @param userName 用户名
+     * @param balance 金额,扣除传负数
+     * @return
+     */
+    void updateUserBalance(@Param("userName") String userName, @Param("balance") BigDecimal balance) throws ServiceException;
+
+    UserInfo getUserByName(String userName);
 }

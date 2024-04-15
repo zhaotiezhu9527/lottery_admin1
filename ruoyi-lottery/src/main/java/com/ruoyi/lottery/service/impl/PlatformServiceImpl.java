@@ -33,7 +33,10 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
     @Override
     public Platform selectPlatformById(Long id)
     {
-        return platformMapper.selectPlatformById(id);
+        Platform platform = platformMapper.selectPlatformById(id);
+        String url = sysParamService.getParamByKey("resource_domain");
+        platform.setImg1(url + platform.getImg1());
+        return platform;
     }
 
     /**
@@ -45,10 +48,7 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
     @Override
     public List<Platform> selectPlatformList(Platform platform)
     {
-        List<Platform> list = platformMapper.selectPlatformList(platform);
-        String url = sysParamService.getParamByKey("resource_domain");
-        list.forEach(p -> p.setImg1(url + p.getImg1()));
-        return list;
+        return platformMapper.selectPlatformList(platform);
     }
 
     /**

@@ -1,30 +1,19 @@
-package com.ruoyi.system.controller;
+package com.ruoyi.web.controller.system;
 
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.dromara.x.file.storage.core.FileInfo;
-import org.dromara.x.file.storage.core.FileStorageService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.SysFileInfo;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysFileInfoService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import org.dromara.x.file.storage.core.FileInfo;
+import org.dromara.x.file.storage.core.FileStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 文件信息Controller
@@ -47,10 +36,34 @@ public class SysFileInfoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:info:upload')")
     @PostMapping("/upload")
-    public AjaxResult uploadImage(MultipartFile file) {
-//        String pathType = httpServletRequest.getParameter("pathType");
-        FileInfo fileInfo = fileStorageService.of(file)
+    public AjaxResult uploadImage(MultipartFile file, HttpServletRequest httpServletRequest) {
+        String pathType = httpServletRequest.getParameter("pathType");
+        System.out.println(pathType);
+        String path = "default/";
+        // 头像
+        if (StringUtils.equals(pathType, "1")) {
+            path = "avatar/";
+        } else if (StringUtils.equals(pathType, "2")) {
+            path = "lottery/";
+        }  else if (StringUtils.equals(pathType, "3")) {
+            path = "banner/";
+        }  else if (StringUtils.equals(pathType, "4")) {
+            path = "activity/";
+        }  else if (StringUtils.equals(pathType, "5")) {
+            path = "platform/";
+        }  else if (StringUtils.equals(pathType, "6")) {
+            path = "platform/elegame/ag/";
+        }  else if (StringUtils.equals(pathType, "7")) {
+            path = "platform/elegame/bbin/";
+        }  else if (StringUtils.equals(pathType, "8")) {
+            path = "platform/elegame/ky/";
+        }  else if (StringUtils.equals(pathType, "9")) {
+            path = "platform/elegame/ly/";
+        }
+        FileInfo fileInfo = fileStorageService.of(file).setPath(path)
                 .upload();  //将文件上传到对应地方
-        return AjaxResult.success(fileInfo);
+
+        String url = "/" + fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename();
+        return AjaxResult.success("操作成功", url);
     }
 }
