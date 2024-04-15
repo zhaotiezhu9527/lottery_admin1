@@ -44,18 +44,28 @@ export const pickerOptions = {
     {
       text: '今天',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
+        const end = new Date(new Date().toLocaleDateString());
+        const start = new Date(new Date().toLocaleDateString());
+        start.setTime(start.getTime());
+
+        end.setTime(end.getTime() + 3600 * 1000 * 24 - 1000);
+
+        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+        
         picker.$emit('pick', [start, end]);
       }
     },
     {
       text: '昨天',
       onClick(picker) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
-        picker.$emit('pick', [start, start]);
+        const today = new Date();
+        today.setHours(0)
+        today.setMinutes(0)
+        today.setSeconds(0)
+        today.setMilliseconds(0)
+        const end = new Date(today - 1000)
+        const start = new Date(today - 3600 * 1000 * 24)
+        picker.$emit('pick', [start, end]);
       }
     },
     {
