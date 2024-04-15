@@ -15,10 +15,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="callbackUrl"    column="callback_url"    />
         <result property="callbackIp"    column="callback_ip"    />
         <result property="payUrl"    column="pay_url"    />
+        <result property="merchantKey"    column="merchant_key"    />
+        <result property="merchantId"    column="merchant_id"    />
     </resultMap>
 
     <sql id="selectPayMerchantVo">
-        select id, merchant_code, merchant_name, merchant_detail, create_time, update_time, status, callback_url, callback_ip, pay_url from t_pay_merchant
+        select id, merchant_code, merchant_name, merchant_detail, create_time, update_time, status, callback_url, callback_ip, pay_url, merchant_id, merchant_key from t_pay_merchant
     </sql>
 
     <select id="selectPayMerchantList" parameterType="PayMerchant" resultMap="PayMerchantResult">
@@ -51,6 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="callbackUrl != null">callback_url,</if>
             <if test="callbackIp != null">callback_ip,</if>
             <if test="payUrl != null">pay_url,</if>
+            <if test="merchantKey != null">merchant_key,</if>
+            <if test="merchantId != null">merchant_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="merchantCode != null and merchantCode != ''">#{merchantCode},</if>
@@ -62,6 +66,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="callbackUrl != null">#{callbackUrl},</if>
             <if test="callbackIp != null">#{callbackIp},</if>
             <if test="payUrl != null">#{payUrl},</if>
+            <if test="merchantKey != null">#{merchantKey},</if>
+            <if test="merchantId != null">#{merchantId},</if>
          </trim>
     </insert>
 
@@ -77,6 +83,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="callbackUrl != null">callback_url = #{callbackUrl},</if>
             <if test="callbackIp != null">callback_ip = #{callbackIp},</if>
             <if test="payUrl != null">pay_url = #{payUrl},</if>
+            <if test="merchantKey != null">merchant_key = #{merchantKey},</if>
+            <if test="merchantId != null">merchant_id = #{merchantId},</if>
         </trim>
         where id = #{id}
     </update>
