@@ -60,6 +60,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastTime != null "> and u.last_time = #{lastTime}</if>
             <if test="lastIp != null  and lastIp != ''"> and u.last_ip = #{lastIp}</if>
             <if test="registerIp != null  and registerIp != ''"> and u.register_ip = #{registerIp}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and u.create_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and u.create_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     
