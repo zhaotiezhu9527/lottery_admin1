@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { listOpenresultGs1mk3, getOpenresultGs1mk3, delOpenresultGs1mk3, addOpenresultGs1mk3, updateOpenresultGs1mk3 } from "@/api/lottery/openresultGs1mk3";
+import { listOpenresultGs1mk3, getOpenresultGs1mk3, delOpenresultGs1mk3, updateOpenresultGs1mk3 } from "@/api/lottery/openresultGs1mk3";
 import { dateFormat,pickerOptions } from '@/utils/auth'
 
 export default {
