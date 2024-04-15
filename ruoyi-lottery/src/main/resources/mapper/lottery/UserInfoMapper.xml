@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
-        select u.id, u.user_name, u.nick_name, u.real_name, u.balance, u.yeb_balance, u.yeb_interest, u.login_status, u.pay_status, u.user_phone, u.user_agent, u.referral_code, a.avatar_img as avatarImg, l.level_name as levelName, l.level_img as levelImg, g.group_name as groupName, u.create_time as createTime, u.last_time, u.last_ip, u.remark, u.register_ip
+        select u.id, u.user_name, u.nick_name, u.real_name, u.balance, u.yeb_balance, u.yeb_interest, u.login_status, u.pay_status, u.user_phone, u.user_agent, u.referral_code, a.avatar_img as avatarImg, l.level_name as levelName, l.level_img as levelImg, g.group_name as groupName, u.create_time, u.last_time, u.last_ip, u.remark, u.register_ip
         from t_user_info u
         left join t_avatar a on u.avatar_id = a.id
         left join t_level l on u.level_id = l.id
