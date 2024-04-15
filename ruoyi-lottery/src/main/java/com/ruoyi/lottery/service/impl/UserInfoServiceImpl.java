@@ -2,6 +2,7 @@ package com.ruoyi.lottery.service.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
@@ -52,7 +53,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         List<UserInfo> list = userInfoMapper.selectUserInfoList(userInfo);
         //获取资源路径
         String url = sysParamService.getParamByKey("resource_domain");
-        list.forEach(user -> user.setAvatarImg(url + user.getAvatarImg()));
+        list.stream().map(a -> {a.setAvatarImg(url + a.getAvatarImg());a.setLevelImg(url + a.getLevelImg());return a;}).collect(Collectors.toList());
         return list;
     }
 
