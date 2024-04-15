@@ -9,53 +9,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="收款人" prop="payeeName">
-        <el-input
-          v-model="queryParams.payeeName"
-          placeholder="请输入收款人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态" prop="accountNo">
+        <el-select v-model="queryParams.type" placeholder="请选择">
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="收款账号" prop="accountNo">
-        <el-input
-          v-model="queryParams.accountNo"
-          placeholder="请输入收款账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="开户网点" prop="address">
-        <el-input
-          v-model="queryParams.address"
-          placeholder="请输入开户网点"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最小金额" prop="minAmount">
-        <el-input
-          v-model="queryParams.minAmount"
-          placeholder="请输入最小金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最大金额" prop="maxAmount">
-        <el-input
-          v-model="queryParams.maxAmount"
-          placeholder="请输入最大金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="值越大越靠前" prop="pxh">
-        <el-input
-          v-model="queryParams.pxh"
-          placeholder="请输入值越大越靠前"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="支付类型">
+        <el-select v-model="queryParams.type" placeholder="请选择">
+          <el-option
+            v-for="item in typeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -71,30 +43,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['lottery:companyAccount:add']"
+          v-hasPermi="['lottery:companyVirtual:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:companyAccount:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:companyAccount:remove']"
-        >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -109,18 +59,33 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="companyAccountList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
+    <el-table v-loading="loading" :data="companyAccountList">
       <el-table-column label="账户名称" align="center" prop="accountName" />
       <el-table-column label="收款人" align="center" prop="payeeName" />
       <el-table-column label="收款账号" align="center" prop="accountNo" />
       <el-table-column label="开户网点" align="center" prop="address" />
       <el-table-column label="最小金额" align="center" prop="minAmount" />
       <el-table-column label="最大金额" align="center" prop="maxAmount" />
-      <el-table-column label="1:银行卡 2:微信 3:支付宝" align="center" prop="type" />
+      <el-table-column label="支付类型" align="center" prop="type" >
+        <template slot-scope="scope">
+          <div v-if="scope.row.type === 1">银行卡</div>
+          <div v-else-if="scope.row.type === 2">微信</div>
+          <div v-else-if="scope.row.type === 3">支付宝</div>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="0:启用 1:停用" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="值越大越靠前" align="center" prop="pxh" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -151,8 +116,8 @@
     />
 
     <!-- 添加或修改公司入款账号对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="账户名称" prop="accountName">
           <el-input v-model="form.accountName" placeholder="请输入账户名称" />
         </el-form-item>
@@ -216,20 +181,27 @@ export default {
         pageNum: 1,
         pageSize: 10,
         accountName: null,
-        payeeName: null,
-        accountNo: null,
-        address: null,
-        minAmount: null,
-        maxAmount: null,
-        type: null,
-        status: null,
-        pxh: null,
+        type: "",
+        status: "",
+        isAsc:'desc',
+        orderByColumn:'id'
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      typeList: [
+        { label: '全部', value: ''},
+        { label: '银行卡', value: 1},
+        { label: '微信', value: 2},
+        { label: '支付宝', value: 3},
+      ],//类型
+      statusList: [
+        { label: '全部', value: ''},
+        { label: '启用', value: 0},
+        { label: '停用', value: 2},
+      ],//类型
     };
   },
   created() {
@@ -255,17 +227,8 @@ export default {
       this.form = {
         id: null,
         accountName: null,
-        payeeName: null,
-        accountNo: null,
-        address: null,
-        minAmount: null,
-        maxAmount: null,
-        type: null,
-        createTime: null,
-        remark: null,
-        status: null,
-        pxh: null,
-        updateTime: null
+        type: "",
+        status: "",
       };
       this.resetForm("form");
     },
@@ -278,12 +241,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -336,7 +293,16 @@ export default {
       this.download('lottery/companyAccount/export', {
         ...this.queryParams
       }, `companyAccount_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 停启用状态
+    changeStatus(id,status){
+      updateCompanyAccount({
+        id:id,
+        status:status,
+      }).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
   }
 };
 </script>

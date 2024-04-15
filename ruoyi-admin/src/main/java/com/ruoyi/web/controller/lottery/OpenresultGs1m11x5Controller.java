@@ -1,5 +1,6 @@
-package com.ruoyi.lottery.controller;
+package com.ruoyi.web.controller.lottery;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +44,13 @@ public class OpenresultGs1m11x5Controller extends BaseController
     {
         startPage();
         List<OpenresultGs1m11x5> list = openresultGs1m11x5Service.selectOpenresultGs1m11x5List(openresultGs1m11x5);
+        Date now = new Date();
+        for (OpenresultGs1m11x5 result : list) {
+            if (now.getTime() < result.getOpenResultTime().getTime()) {
+                result.setOpenStatus(1L);
+                result.setOpenResult("");
+            }
+        }
         return getDataTable(list);
     }
 
@@ -89,6 +97,12 @@ public class OpenresultGs1m11x5Controller extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OpenresultGs1m11x5 openresultGs1m11x5)
     {
+        OpenresultGs1m11x5 result = openresultGs1m11x5Service.selectOpenresultGs1m11x5ById(openresultGs1m11x5.getId());
+        Date now = new Date();
+        if (now.getTime() >= result.getOpenResultTime().getTime()) {
+            return error("当前期已过开奖时间");
+        }
+        result.setOpenStatus(0L);
         return toAjax(openresultGs1m11x5Service.updateOpenresultGs1m11x5(openresultGs1m11x5));
     }
 

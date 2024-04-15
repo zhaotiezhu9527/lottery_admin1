@@ -1,25 +1,20 @@
-package com.ruoyi.lottery.controller;
+package com.ruoyi.web.controller.lottery;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.lottery.domain.OpenresultGs1mkl8;
 import com.ruoyi.lottery.service.IOpenresultGs1mkl8Service;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 1分快乐8Controller
@@ -43,6 +38,13 @@ public class OpenresultGs1mkl8Controller extends BaseController
     {
         startPage();
         List<OpenresultGs1mkl8> list = openresultGs1mkl8Service.selectOpenresultGs1mkl8List(openresultGs1mkl8);
+        Date now = new Date();
+        for (OpenresultGs1mkl8 result : list) {
+            if (now.getTime() < result.getOpenResultTime().getTime()) {
+                result.setOpenStatus(1L);
+                result.setOpenResult("");
+            }
+        }
         return getDataTable(list);
     }
 
@@ -89,6 +91,12 @@ public class OpenresultGs1mkl8Controller extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OpenresultGs1mkl8 openresultGs1mkl8)
     {
+        OpenresultGs1mkl8 result = openresultGs1mkl8Service.selectOpenresultGs1mkl8ById(openresultGs1mkl8.getId());
+        Date now = new Date();
+        if (now.getTime() >= result.getOpenResultTime().getTime()) {
+            return error("当前期已过开奖时间");
+        }
+        result.setOpenStatus(0L);
         return toAjax(openresultGs1mkl8Service.updateOpenresultGs1mkl8(openresultGs1mkl8));
     }
 

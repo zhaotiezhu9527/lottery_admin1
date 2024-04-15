@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.lottery;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -31,7 +32,7 @@ public class PayMerchantController extends BaseController
     /**
      * 查询商家配置列表
      */
-    @PreAuthorize("@ss.hasPermi('lottery:payMerchant:list')")
+    @Anonymous
     @GetMapping("/list")
     public TableDataInfo list(PayMerchant payMerchant)
     {
