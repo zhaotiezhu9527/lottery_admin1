@@ -33,10 +33,7 @@ public class EleGameServiceImpl extends ServiceImpl<EleGameMapper, EleGame> impl
     @Override
     public EleGame selectEleGameById(Long id)
     {
-        EleGame eleGame = eleGameMapper.selectEleGameById(id);
-        String url = sysParamService.getParamByKey("resource_domain");
-        eleGame.setImg(url + eleGame.getImg());
-        return eleGame;
+        return eleGameMapper.selectEleGameById(id);
     }
 
     /**

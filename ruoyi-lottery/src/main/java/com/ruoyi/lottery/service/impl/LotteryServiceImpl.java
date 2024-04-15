@@ -33,10 +33,7 @@ public class LotteryServiceImpl extends ServiceImpl<LotteryMapper, Lottery> impl
     @Override
     public Lottery selectLotteryById(Long id)
     {
-        Lottery lottery = lotteryMapper.selectLotteryById(id);
-        String url = sysParamService.getParamByKey("resource_domain");
-        lottery.setImg(url + lottery.getImg());
-        return lottery;
+        return lotteryMapper.selectLotteryById(id);
     }
 
     /**

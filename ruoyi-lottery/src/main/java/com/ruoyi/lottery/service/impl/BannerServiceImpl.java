@@ -33,10 +33,7 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
     @Override
     public Banner selectBannerById(Long id)
     {
-        Banner banner = bannerMapper.selectBannerById(id);
-        String url = sysParamService.getParamByKey("resource_domain");
-        banner.setImg(url + banner.getImg());
-        return banner;
+        return bannerMapper.selectBannerById(id);
     }
 
     /**
