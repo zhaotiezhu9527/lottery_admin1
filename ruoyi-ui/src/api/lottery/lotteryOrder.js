@@ -42,3 +42,11 @@ export function delLotteryOrder(id) {
     method: 'delete'
   })
 }
+
+// 取消注单
+export function lotteryOrderOrder(query) {
+  return request({
+    url: '/lottery/lotteryOrder/cancel/' + query,
+    method: 'get',
+  })
+}
