@@ -35,7 +35,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['lottery:openresultCqssc:export']"
+          v-hasPermi="['lottery:openresultGs1mpk10:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -73,14 +73,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['lottery:openresultJsk3:edit']"
+            v-hasPermi="['lottery:openresultGs1mpk10:edit']"
           >修改</el-button>
           <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['lottery:openresultJsk3:remove']"
+            v-hasPermi="['lottery:openresultGs1mpk10:remove']"
           >删除</el-button> -->
         </template>
       </el-table-column>
@@ -113,11 +113,11 @@
 </template>
 
 <script>
-import { listOpenresultBjpk10, getOpenresultBjpk10, delOpenresultBjpk10, updateOpenresultBjpk10 } from "@/api/lottery/openresultBjpk10";
+import { listOpenresultGs1mpk10, getOpenresultGs1mpk10, delOpenresultGs1mpk10, updateOpenresultGs1mpk10 } from "@/api/lottery/openresultGs1mpk10";
 import { dateFormat,pickerOptions } from '@/utils/auth'
 
 export default {
-  name: "OpenresultBjpk10",
+  name: "OpenresultGs1mpk10",
   data() {
     return {
       // 遮罩层
@@ -161,7 +161,7 @@ export default {
     /** 查询开奖结果(快3)列表 */
     getList() {
       this.loading = true;
-      listOpenresultBjpk10(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listOpenresultGs1mpk10(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.openresultList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -201,7 +201,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getOpenresultBjpk10(id).then(response => {
+      getOpenresultGs1mpk10(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改开奖结果";
@@ -216,7 +216,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateOpenresultBjpk10(obj).then(response => {
+            updateOpenresultGs1mpk10(obj).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -229,7 +229,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除开奖结果编号为"' + ids + '"的数据项？').then(function() {
-        return delOpenresultBjpk10(ids);
+        return delOpenresultGs1mpk10(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -237,9 +237,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('lottery/openresultBjpk10/export', {
+      this.download('lottery/openresultGs1mpk10/export', {
         ...this.queryParams
-      }, `openresultBjpk10_${new Date().getTime()}.xlsx`)
+      }, `openresultGs1mpk10_${new Date().getTime()}.xlsx`)
     },
     getDefaultTime() {
       let end = new Date();
