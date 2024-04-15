@@ -32,6 +32,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eduType != null "> and edu_type = #{eduType}</if>
             <if test="platCode != null  and platCode != ''"> and plat_code = #{platCode}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and create_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and create_time &lt;= #{params.endTime}
+            </if>
         </where>
     </select>
     
