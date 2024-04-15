@@ -67,6 +67,12 @@
             <artifactId>ruoyi-lottery</artifactId>
         </dependency>
 
+        <!-- 内部调用-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-api</artifactId>
+        </dependency>
+
         <!-- oss-->
         <dependency>
             <groupId>com.aliyun.oss</groupId>
