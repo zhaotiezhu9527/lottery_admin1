@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -65,5 +66,12 @@ public class Deposit extends BaseEntity
     /** 0:待审核 1:审核成功 2:审核失败 */
     @Excel(name = "审核结果", readConverterExp = "0=待审核,1=审核成功,2=审核失败")
     private Long status;
+
+    /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    /** 备注 */
+    private String remark;
 
 }
