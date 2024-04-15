@@ -165,7 +165,6 @@
 
     <el-table v-loading="loading" :data="agRecordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="平台用户名" align="center" prop="platUserName" />
       <el-table-column label="注单号码" align="center" prop="orderNo" />

@@ -17,14 +17,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="充值金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入充值金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="支付类型">
         <el-select v-model="queryParams.depositType" placeholder="请选择">
           <el-option
@@ -54,6 +46,7 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -150,7 +143,7 @@
 
 <script>
 import { listDeposit,depositCheck } from "@/api/lottery/deposit";
-import { dateFormat } from '@/utils/auth'
+import { dateFormat,pickerOptions } from '@/utils/auth'
 
 export default {
   name: "Deposit",
@@ -205,6 +198,7 @@ export default {
       listId: "",//操作id
       examineOpen: false,//审核状态
       examineForm: {},//审核提交数据
+      pickerOptions: pickerOptions,
     };
   },
   created() {

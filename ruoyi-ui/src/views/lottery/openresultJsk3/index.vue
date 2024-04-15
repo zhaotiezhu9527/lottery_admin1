@@ -9,54 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="三方期号" prop="platQs">
-        <el-input
-          v-model="queryParams.platQs"
-          placeholder="请输入三方期号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="开奖号码" prop="openResult">
-        <el-input
-          v-model="queryParams.openResult"
-          placeholder="请输入开奖号码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="当前第N期" prop="currCount">
-        <el-input
-          v-model="queryParams.currCount"
-          placeholder="请输入当前第N期"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="开盘时间" prop="openTime">
-        <el-date-picker clearable
-          v-model="queryParams.openTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择开盘时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="封盘时间" prop="closeTime">
-        <el-date-picker clearable
-          v-model="queryParams.closeTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择封盘时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="开奖时间" prop="openResultTime">
-        <el-date-picker clearable
-          v-model="queryParams.openResultTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择开奖时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -109,9 +61,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="openresultJsk3List" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
+    <el-table v-loading="loading" :data="openresultJsk3List">
       <el-table-column label="期号" align="center" prop="qs" />
       <el-table-column label="三方期号" align="center" prop="platQs" />
       <el-table-column label="开奖号码" align="center" prop="openResult" />
@@ -300,12 +250,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
