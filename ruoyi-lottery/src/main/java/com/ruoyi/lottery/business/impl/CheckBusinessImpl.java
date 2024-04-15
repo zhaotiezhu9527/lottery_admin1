@@ -100,7 +100,7 @@ public class CheckBusinessImpl implements CheckBusiness {
             record.setTrxId(IdUtils.getTransactionOrderNo());
             record.setAmount(withdraw.getAmount());
             record.setBeforeAmount(userInfo.getBalance());
-            record.setAfterAmount(NumberUtil.sub(userInfo.getBalance(), withdraw.getAmount()));
+            record.setAfterAmount(NumberUtil.add(userInfo.getBalance(), withdraw.getAmount()));
             record.setPayType(0L);
             record.setBusinessType(12L);
             record.setBusinessOrder(withdraw.getOrderNo());
