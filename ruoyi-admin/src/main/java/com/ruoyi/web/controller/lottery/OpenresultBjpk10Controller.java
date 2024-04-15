@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.lottery;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -89,6 +90,12 @@ public class OpenresultBjpk10Controller extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OpenresultBjpk10 openresultBjpk10)
     {
+        OpenresultBjpk10 result = openresultBjpk10Service.selectOpenresultBjpk10ById(openresultBjpk10.getId());
+        Date now = new Date();
+        if (now.getTime() >= result.getOpenResultTime().getTime()) {
+            return error("当前期已过开奖时间");
+        }
+        openresultBjpk10.setOpenStatus(0L);
         return toAjax(openresultBjpk10Service.updateOpenresultBjpk10(openresultBjpk10));
     }
 
