@@ -77,6 +77,7 @@ public class BannerController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Banner banner)
     {
+        banner.setOperName(getUsername());
         return toAjax(bannerService.insertBanner(banner));
     }
 
@@ -88,6 +89,7 @@ public class BannerController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Banner banner)
     {
+        banner.setOperName(getUsername());
         return toAjax(bannerService.updateBanner(banner));
     }
 

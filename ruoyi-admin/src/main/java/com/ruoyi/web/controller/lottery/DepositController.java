@@ -83,6 +83,7 @@ public class DepositController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Deposit deposit)
     {
+        deposit.setOperName(getUsername());
         return toAjax(depositService.insertDeposit(deposit));
     }
 
@@ -94,6 +95,7 @@ public class DepositController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Deposit deposit)
     {
+        deposit.setOperName(getUsername());
         return toAjax(depositService.updateDeposit(deposit));
     }
 
