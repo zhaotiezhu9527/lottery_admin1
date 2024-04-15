@@ -17,14 +17,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="真实姓名" prop="realName">
-        <el-input
-          v-model="queryParams.realName"
-          placeholder="请输入真实姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
 <!--      <el-form-item label="余额" prop="balance">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.balance"-->
@@ -65,14 +57,6 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-      <el-form-item label="手机号" prop="userPhone">
-        <el-input
-          v-model="queryParams.userPhone"
-          placeholder="请输入手机号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="上级代理" prop="userAgent">
         <el-input
           v-model="queryParams.userAgent"
@@ -97,14 +81,6 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-      <el-form-item label="等级ID" prop="levelId">
-        <el-input
-          v-model="queryParams.levelId"
-          placeholder="请输入等级ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
 <!--      <el-form-item label="分组ID" prop="groupId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.groupId"-->
@@ -137,6 +113,17 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
+      <el-form-item label="时间" prop="orderTime">
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 340px"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -144,27 +131,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['lottery:userInfo:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:userInfo:edit']"
-        >修改</el-button>
-      </el-col>
+     <el-col :span="1.5">
+       <el-button
+         type="primary"
+         plain
+         icon="el-icon-plus"
+         size="mini"
+         @click="handleAdd"
+         v-hasPermi="['lottery:userInfo:add']"
+       >新增会员</el-button>
+     </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="danger"-->
@@ -189,55 +165,78 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="userInfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="userInfoList">
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="昵称" align="center" prop="nickName" />
-      <el-table-column label="真实姓名" align="center" prop="realName" />
       <el-table-column label="余额" align="center" prop="balance" />
-      <el-table-column label="余额宝余额" align="center" prop="yebBalance" />
-      <el-table-column label="余额宝利息" align="center" prop="yebInterest" />
-      <el-table-column label="状态" align="center" prop="loginStatus" >
-        <template v-slot="scope">
-          {{ scope.row.loginStatus === 0 ? '正常' : '停用' }}
+      <el-table-column label="登录状态" align="center" prop="loginStatus" >
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.loginStatus"
+            @change="changeStatus(scope.row.id,scope.row.loginStatus,'login')"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
         </template>
       </el-table-column>
       <el-table-column label="支付状态" align="center" prop="payStatus" >
-        <template v-slot="scope">
-          {{ scope.row.payStatus === 0 ? '正常' : '停用' }}
-        </template>
-      </el-table-column>>
-      <el-table-column label="手机号" :formatter="formatPhoneNumber" align="center" prop="userPhone" />
-      <el-table-column label="上级代理" align="center" prop="userAgent" />
-      <el-table-column label="邀请码" align="center" prop="referralCode" />
-      <el-table-column label="用户头像ID" align="center" prop="avatarId" />
-      <el-table-column label="等级ID" align="center" prop="levelId" />
-      <el-table-column label="分组ID" align="center" prop="groupId" />
-      <el-table-column label="最后登录时间" align="center" prop="lastTime" width="180">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.lastTime, '{y}-{m}-{d}') }}</span>
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.payStatus"
+            @change="changeStatus(scope.row.id,scope.row.payStatus,'pay')"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" align="center" prop="lastIp" />
+      <el-table-column label="上级代理" align="center" prop="userAgent" />
+      <el-table-column label="邀请码" align="center" prop="referralCode" />
+      <el-table-column label="IP/时间信息" align="center" prop="lastTime" width="180">
+        <template slot="header">
+          <div>注册IP</div>
+          <div>注册时间</div>
+        </template>
+        <template slot-scope="scope">
+          <div><a class="curpor" :href="'https://ip138.com/iplookup.php?ip=' + scope.row.registerIp" target="_blank">{{ scope.row.registerIp }}</a></div>
+          <div>{{ scope.row.createTime }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="IP/时间信息" align="center" prop="lastTime" width="180">
+        <template slot="header">
+          <div>最后登陆IP</div>
+          <div>最后登陆时间</div>
+        </template>
+        <template slot-scope="scope">
+          <div><a class="curpor" :href="'https://ip138.com/iplookup.php?ip=' + scope.row.lastIp" target="_blank">{{ scope.row.lastIp }}</a></div>
+          <div>{{ scope.row.lastTime }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="注册IP" align="center" prop="registerIp" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['lottery:userInfo:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['lottery:userInfo:remove']"
-          >删除</el-button>
+            v-hasPermi="['lottery:userInfo:optMoney']"
+            @click="moneyUpdate(scope.row,'up')"
+          >上分</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            @click="moneyUpdate(scope.row,'down')"
+            v-hasPermi="['lottery:userInfo:optMoney']"
+          >下分</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -259,52 +258,14 @@
         <el-form-item label="昵称" prop="nickName">
           <el-input v-model="form.nickName" placeholder="请输入昵称" />
         </el-form-item>
-        <el-form-item label="真实姓名" prop="realName">
-          <el-input v-model="form.realName" placeholder="请输入真实姓名" />
+        <el-form-item label="登录密码">
+          <el-input v-model="form.loginPwd" placeholder="不输入表示不修改" />
         </el-form-item>
-        <el-form-item label="余额" prop="balance">
-          <el-input v-model="form.balance" placeholder="请输入余额" />
-        </el-form-item>
-        <el-form-item label="余额宝余额" prop="yebBalance">
-          <el-input v-model="form.yebBalance" placeholder="请输入余额宝余额" />
-        </el-form-item>
-        <el-form-item label="余额宝利息" prop="yebInterest">
-          <el-input v-model="form.yebInterest" placeholder="请输入余额宝利息" />
-        </el-form-item>
-        <el-form-item label="手机号" prop="userPhone">
-          <el-input v-model="form.userPhone" placeholder="请输入手机号" />
-        </el-form-item>
-        <el-form-item label="上级代理" prop="userAgent">
-          <el-input v-model="form.userAgent" placeholder="请输入上级代理" />
-        </el-form-item>
-        <el-form-item label="邀请码" prop="referralCode">
-          <el-input v-model="form.referralCode" placeholder="请输入邀请码" />
-        </el-form-item>
-        <el-form-item label="用户头像ID" prop="avatarId">
-          <el-input v-model="form.avatarId" placeholder="请输入用户头像ID" />
-        </el-form-item>
-        <el-form-item label="等级ID" prop="levelId">
-          <el-input v-model="form.levelId" placeholder="请输入等级ID" />
-        </el-form-item>
-        <el-form-item label="分组ID" prop="groupId">
-          <el-input v-model="form.groupId" placeholder="请输入分组ID" />
-        </el-form-item>
-        <el-form-item label="最后登录时间" prop="lastTime">
-          <el-date-picker clearable
-            v-model="form.lastTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择最后登录时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="最后登录IP" prop="lastIp">
-          <el-input v-model="form.lastIp" placeholder="请输入最后登录IP" />
+        <el-form-item label="支付密码">
+          <el-input v-model="form.payPwd" placeholder="不输入表示不修改" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="注册IP" prop="registerIp">
-          <el-input v-model="form.registerIp" placeholder="请输入注册IP" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -312,11 +273,56 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 增减余额对话框 -->
+    <el-dialog :title="moneyTitle" :visible.sync="balanceOpen" width="500px" append-to-body>
+      <el-form ref="balanceform" :model="balanceForm" :rules="rules" label-width="80px">
+        <el-form-item label="用户名" prop="userName">
+          <el-input :disabled="true" v-model="balanceForm.userName" placeholder="请输入4-12位数字或字母" />
+        </el-form-item>
+        <el-form-item label="金额" prop="money">
+          <!-- <el-input v-model="balanceForm.money" placeholder="请输入金额" /> -->
+          <el-input-number v-model="balanceForm.money" :min="1" label="请输入金额"></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="balanceForm.remark" placeholder="请填写备注" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="balanceSub">确 定</el-button>
+        <el-button @click="balanceOpen = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <!-- 添加对话框 -->
+    <el-dialog title="添加会员" :visible.sync="addOpen" width="500px" append-to-body>
+      <el-form ref="addform" :model="addForm" :rules="rules" label-width="120px">
+        <!-- <el-form-item label="代理用户名">
+          <el-input v-model="addForm.userAgent" placeholder="请输入推荐人用户名" />
+        </el-form-item> -->
+        <el-form-item label="用户名" prop="userName">
+          <el-input v-model="addForm.userName" placeholder="请输入4-12位数字或字母" />
+        </el-form-item>
+        <!-- <el-form-item label="昵称" prop="nickName">
+          <el-input v-model="addForm.nickName" placeholder="请输入4-12位数字或字母" />
+        </el-form-item> -->
+        <el-form-item label="密码" prop="loginPwd">
+          <el-input v-model="addForm.loginPwd" placeholder="请输入6-12位数字或字母" />
+        </el-form-item>
+        <!-- <el-form-item label="支付密码" prop="payPwd">
+          <el-input v-model="addForm.payPwd" placeholder="请输入6位数字" />
+        </el-form-item> -->
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addSub">确 定</el-button>
+        <el-button @click="addCancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listUserInfo, getUserInfo, delUserInfo, addUserInfo, updateUserInfo } from "@/api/lottery/userInfo";
+import { listUserInfo, getUserInfo, delUserInfo, addUserInfo, updateUserInfo,userInfoOptMoney } from "@/api/lottery/userInfo";
+import { dateFormat } from '@/utils/auth'
+
 
 export default {
   name: "UserInfo",
@@ -324,12 +330,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -346,23 +346,11 @@ export default {
         pageSize: 10,
         userName: null,
         nickName: null,
-        realName: null,
-        balance: null,
-        yebBalance: null,
-        yebInterest: null,
-        loginPwd: null,
-        payPwd: null,
         loginStatus: null,
         payStatus: null,
-        userPhone: null,
         userAgent: null,
-        referralCode: null,
-        avatarId: null,
-        levelId: null,
-        groupId: null,
-        lastTime: null,
-        lastIp: null,
-        registerIp: null
+        isAsc:'desc',
+        orderByColumn:'u.create_time'
       },
       // 表单参数
       form: {},
@@ -374,22 +362,35 @@ export default {
         loginPwd: [
           { required: true, message: "登录密码不能为空", trigger: "blur" }
         ],
-      }
+      },
+      // 时间
+      dateRange:[],
+      balanceOpen: false,//上下分弹窗
+      // 增减余额表单数据
+      balanceForm: {
+        remark:'',
+      },
+      moneyTitle:'',//上下分标题
+      // 是否显示添加弹出层
+      addOpen: false,
+      // 表单参数
+      addForm: {},
     };
   },
   created() {
+    this.getDefaultTime();
     this.getList();
   },
   methods: {
-    formatPhoneNumber(row) {
-      // 将中间四位数字替换为星号
-      const maskedNumber = row.userPhone.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2');
-      return maskedNumber;
-    },
+    // formatPhoneNumber(row) {
+    //   // 将中间四位数字替换为星号
+    //   const maskedNumber = row.userPhone.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2');
+    //   return maskedNumber;
+    // },
     /** 查询会员列表列表 */
     getList() {
       this.loading = true;
-      listUserInfo(this.queryParams).then(response => {
+      listUserInfo(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.userInfoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -406,26 +407,11 @@ export default {
         id: null,
         userName: null,
         nickName: null,
-        realName: null,
         balance: null,
-        yebBalance: null,
-        yebInterest: null,
         loginPwd: null,
         payPwd: null,
-        loginStatus: null,
-        payStatus: null,
-        userPhone: null,
         userAgent: null,
-        referralCode: null,
-        avatarId: null,
-        levelId: null,
-        groupId: null,
-        createTime: null,
-        updateTime: null,
-        lastTime: null,
-        lastIp: null,
         remark: null,
-        registerIp: null
       };
       this.resetForm("form");
     },
@@ -439,27 +425,38 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.open = true;
-      this.title = "添加会员列表";
+      this.addOpen = true;
+    },
+    addSub(){
+      this.$refs["addform"].validate(valid => {
+        if (valid) {
+          addUserInfo(this.addForm).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.addOpen = false;
+            this.getList();
+          });
+        }
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id
       getUserInfo(id).then(response => {
         this.form = response.data;
+        this.form.loginPwd = ''
+        this.form.payPwd = ''
         this.open = true;
         this.title = "修改会员列表";
       });
+    },
+    // 添加取消按钮
+    addCancel() {
+      this.addOpen = false;
+      this.adReset();
     },
     /** 提交按钮 */
     submitForm() {
@@ -496,7 +493,59 @@ export default {
       this.download('lottery/userInfo/export', {
         ...this.queryParams
       }, `userInfo_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 默认时间
+    getDefaultTime() {
+      let end = new Date();
+      let start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+      this.dateRange[0] = dateFormat("YYYY-mm-dd" , end) + ' 00:00:00'
+      this.dateRange[1] = dateFormat("YYYY-mm-dd" , end) + ' 23:59:59'
+    },
+    // 停启用状态
+    changeStatus(id,status,type){
+      let obj = { 
+      }
+      if(type === 'login'){
+        obj = {
+          id: id,
+          loginStatus: status,
+        }
+      }else if(type === 'pay'){
+        obj = {
+          id: id,
+          payStatus: status,
+        }
+      }
+      updateUserInfo(obj).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
+    // 增减余额
+    moneyUpdate(data,type){
+      // this.balanceReset();
+      if(type === 'up'){
+        this.moneyTitle = '会员上分'
+        this.balanceForm.type = 1
+      }else if(type === 'down'){
+        this.moneyTitle = '会员下分'
+        this.balanceForm.type = 2
+      }
+      this.balanceOpen = true;
+      this.balanceForm.userName = data.userName
+    },
+    // 上下分提交
+    balanceSub(){
+      this.$refs["balanceform"].validate(valid => {
+        if (valid) {
+          userInfoOptMoney(this.balanceForm).then(response => {
+            this.$modal.msgSuccess("操作成功");
+            this.balanceOpen = false;
+            this.getList();
+          });
+        }
+      });
+    },
   }
 };
 </script>
