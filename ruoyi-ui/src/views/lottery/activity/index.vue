@@ -29,7 +29,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="activityList">
-      <el-table-column label="id" align="center" prop="id" />
+      
       <el-table-column label="活动标题" align="center" prop="title" />
       <el-table-column label="封面图" align="center" prop="img1" width="100">
         <template slot-scope="scope">

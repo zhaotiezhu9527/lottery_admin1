@@ -26,7 +26,6 @@
       </el-form-item>
     </el-form>
     <el-table v-loading="loading" :data="lotteryList" >
-      <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="彩种名称" align="center" prop="lotteryName" />
       <el-table-column label="彩种图标" align="center" prop="img">
         <template slot-scope="scope">

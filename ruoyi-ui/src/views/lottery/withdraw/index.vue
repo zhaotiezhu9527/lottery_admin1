@@ -17,14 +17,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="提现类型">
         <el-select v-model="queryParams.accountType" placeholder="请选择">
           <el-option
@@ -54,6 +46,7 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -148,6 +141,7 @@
 
 <script>
 import { listWithdraw,withdrawCheck } from "@/api/lottery/withdraw";
+import { dateFormat,pickerOptions } from '@/utils/auth'
 
 export default {
   name: "Withdraw",
@@ -204,9 +198,11 @@ export default {
       listId: "",//操作id
       examineOpen: false,//审核状态
       examineForm: {},//审核提交数据
+      pickerOptions: pickerOptions,
     };
   },
   created() {
+    // this.getDefaultTime();
     this.getList();
   },
   methods: {
@@ -252,6 +248,14 @@ export default {
           });
         }
       });
+    },
+    // 默认时间
+    getDefaultTime() {
+      let end = new Date();
+      let start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+      this.dateRange[0] = dateFormat("YYYY-mm-dd" , end) + ' 00:00:00'
+      this.dateRange[1] = dateFormat("YYYY-mm-dd" , end) + ' 23:59:59'
     },
   }
 };

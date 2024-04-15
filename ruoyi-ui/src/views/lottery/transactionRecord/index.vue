@@ -68,7 +68,6 @@
     </el-row>
 
     <el-table v-loading="loading" :data="transactionRecordList" >
-      <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="流水号" align="center" prop="trxId" />
       <el-table-column label="金额" align="center" prop="amount" />
@@ -94,6 +93,7 @@
           <div v-else-if="scope.row.businessType === 9">后台入款</div>
           <div v-else-if="scope.row.businessType === 10">后台扣款</div>
           <div v-else-if="scope.row.businessType === 11">彩票和局退还</div>
+          <div v-else-if="scope.row.businessType === 12">拒绝提现</div>
         </template>
       </el-table-column>
       <el-table-column label="业务订单号" align="center" prop="businessOrder" />
@@ -180,13 +180,14 @@ export default {
         { label: '后台入款', value: 9},
         { label: '后台扣款', value: 10},
         { label: '彩票和局退款', value: 11},
+        { label: '拒绝提现', value: 12},
       ],//状态
       // 时间
       dateRange:[],
     };
   },
   created() {
-    this.getDefaultTime();
+    // this.getDefaultTime();
     this.getList();
   },
   methods: {
