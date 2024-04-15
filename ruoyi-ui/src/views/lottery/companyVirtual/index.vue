@@ -9,54 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="收款账户" prop="accountNo">
-        <el-input
-          v-model="queryParams.accountNo"
-          placeholder="请输入收款账户"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="汇率" prop="exchangeRate">
-        <el-input
-          v-model="queryParams.exchangeRate"
-          placeholder="请输入汇率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="操作人" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          placeholder="请输入操作人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="排序号(值越大越靠前)" prop="pxh">
-        <el-input
-          v-model="queryParams.pxh"
-          placeholder="请输入排序号(值越大越靠前)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最小金额" prop="minAmount">
-        <el-input
-          v-model="queryParams.minAmount"
-          placeholder="请输入最小金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最大金额" prop="maxAmount">
-        <el-input
-          v-model="queryParams.maxAmount"
-          placeholder="请输入最大金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -76,28 +28,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:companyVirtual:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:companyVirtual:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -109,19 +39,33 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="companyVirtualList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
+    <el-table v-loading="loading" :data="companyVirtualList">
       <el-table-column label="通道名称" align="center" prop="channelName" />
-      <el-table-column label="1:trc20 2:erc20" align="center" prop="channelType" />
-      <el-table-column label="收款账户" align="center" prop="accountNo" />
+      <el-table-column label="提现网络" align="center" prop="channelType" >
+        <template slot-scope="scope">
+          <div v-if="scope.row.channelType === 1">trc20</div>
+          <div v-else-if="scope.row.channelType === 2">erc20</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="收款账户" align="center" prop="accountNo" width="180"/>
       <el-table-column label="汇率" align="center" prop="exchangeRate" />
-      <el-table-column label="操作人" align="center" prop="operName" />
-      <el-table-column label="排序号(值越大越靠前)" align="center" prop="pxh" />
-      <el-table-column label="0:启用 1:停用" align="center" prop="status" />
-      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="最小金额" align="center" prop="minAmount" />
       <el-table-column label="最大金额" align="center" prop="maxAmount" />
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180"/>
+      <el-table-column label="排序号" align="center" prop="pxh" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -151,10 +95,20 @@
     />
 
     <!-- 添加或修改公司U地址对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="通道名称" prop="channelName">
           <el-input v-model="form.channelName" placeholder="请输入通道名称" />
+        </el-form-item>
+        <el-form-item label="提现网络" prop="channelType">
+            <el-select v-model="form.channelType" placeholder="请选择">
+            <el-option
+              v-for="item in channelList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="收款账户" prop="accountNo">
           <el-input v-model="form.accountNo" placeholder="请输入收款账户" />
@@ -162,20 +116,17 @@
         <el-form-item label="汇率" prop="exchangeRate">
           <el-input v-model="form.exchangeRate" placeholder="请输入汇率" />
         </el-form-item>
-        <el-form-item label="操作人" prop="operName">
-          <el-input v-model="form.operName" placeholder="请输入操作人" />
-        </el-form-item>
-        <el-form-item label="排序号(值越大越靠前)" prop="pxh">
-          <el-input v-model="form.pxh" placeholder="请输入排序号(值越大越靠前)" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
         <el-form-item label="最小金额" prop="minAmount">
           <el-input v-model="form.minAmount" placeholder="请输入最小金额" />
         </el-form-item>
         <el-form-item label="最大金额" prop="maxAmount">
           <el-input v-model="form.maxAmount" placeholder="请输入最大金额" />
+        </el-form-item>
+        <el-form-item label="排序号" prop="pxh">
+          <el-input v-model="form.pxh" placeholder="请输入排序号(值越大越靠前)" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -216,20 +167,24 @@ export default {
         pageNum: 1,
         pageSize: 10,
         channelName: null,
-        channelType: null,
-        accountNo: null,
-        exchangeRate: null,
-        operName: null,
-        pxh: null,
-        status: null,
-        minAmount: null,
-        maxAmount: null
+        isAsc:'desc',
+        orderByColumn:'id'
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      channelList: [
+        {
+          value: 1,
+          label: 'trc20',
+        },
+        {
+          value: 2,
+          label: 'erc20',
+        }
+      ],//提现网络列表
     };
   },
   created() {
@@ -278,12 +233,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -336,7 +285,16 @@ export default {
       this.download('lottery/companyVirtual/export', {
         ...this.queryParams
       }, `companyVirtual_${new Date().getTime()}.xlsx`)
-    }
+    },
+     // 停启用状态
+     changeStatus(id,status){
+      updateCompanyVirtual({
+        id:id,
+        status:status,
+      }).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
   }
 };
 </script>
