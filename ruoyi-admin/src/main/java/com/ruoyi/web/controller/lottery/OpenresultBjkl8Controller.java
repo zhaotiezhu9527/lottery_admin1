@@ -54,6 +54,7 @@ public class OpenresultBjkl8Controller extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultBjkl8 openresultBjkl8)
     {
+        startOrderBy();
         List<OpenresultBjkl8> list = openresultBjkl8Service.selectOpenresultBjkl8List(openresultBjkl8);
         ExcelUtil<OpenresultBjkl8> util = new ExcelUtil<OpenresultBjkl8>(OpenresultBjkl8.class);
         util.exportExcel(response, list, "开奖结果(北京快乐8)数据");

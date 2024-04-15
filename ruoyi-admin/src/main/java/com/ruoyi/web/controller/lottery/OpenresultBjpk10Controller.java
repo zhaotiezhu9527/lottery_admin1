@@ -54,6 +54,7 @@ public class OpenresultBjpk10Controller extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultBjpk10 openresultBjpk10)
     {
+        startOrderBy();
         List<OpenresultBjpk10> list = openresultBjpk10Service.selectOpenresultBjpk10List(openresultBjpk10);
         ExcelUtil<OpenresultBjpk10> util = new ExcelUtil<OpenresultBjpk10>(OpenresultBjpk10.class);
         util.exportExcel(response, list, "开奖结果(北京PK10)数据");

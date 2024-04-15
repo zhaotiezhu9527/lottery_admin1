@@ -48,6 +48,7 @@ public class PayMerchantController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, PayMerchant payMerchant)
     {
+        startOrderBy();
         List<PayMerchant> list = payMerchantService.selectPayMerchantList(payMerchant);
         ExcelUtil<PayMerchant> util = new ExcelUtil<PayMerchant>(PayMerchant.class);
         util.exportExcel(response, list, "商家配置数据");

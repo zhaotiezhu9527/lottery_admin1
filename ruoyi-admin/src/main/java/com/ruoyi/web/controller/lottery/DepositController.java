@@ -60,6 +60,7 @@ public class DepositController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Deposit deposit)
     {
+        startOrderBy();
         List<Deposit> list = depositService.selectDepositList(deposit);
         ExcelUtil<Deposit> util = new ExcelUtil<Deposit>(Deposit.class);
         util.exportExcel(response, list, "充值订单数据");

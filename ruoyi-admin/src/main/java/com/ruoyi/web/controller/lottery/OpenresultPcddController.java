@@ -54,6 +54,7 @@ public class OpenresultPcddController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultPcdd openresultPcdd)
     {
+        startOrderBy();
         List<OpenresultPcdd> list = openresultPcddService.selectOpenresultPcddList(openresultPcdd);
         ExcelUtil<OpenresultPcdd> util = new ExcelUtil<OpenresultPcdd>(OpenresultPcdd.class);
         util.exportExcel(response, list, "开奖结果(PC蛋蛋)数据");

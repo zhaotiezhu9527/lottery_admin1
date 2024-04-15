@@ -54,6 +54,7 @@ public class OpenresultFtController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultFt openresultFt)
     {
+        startOrderBy();
         List<OpenresultFt> list = openresultFtService.selectOpenresultFtList(openresultFt);
         ExcelUtil<OpenresultFt> util = new ExcelUtil<OpenresultFt>(OpenresultFt.class);
         util.exportExcel(response, list, "开奖结果(飞艇)数据");

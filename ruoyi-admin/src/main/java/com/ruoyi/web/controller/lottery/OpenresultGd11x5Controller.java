@@ -54,6 +54,7 @@ public class OpenresultGd11x5Controller extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultGd11x5 openresultGd11x5)
     {
+        startOrderBy();
         List<OpenresultGd11x5> list = openresultGd11x5Service.selectOpenresultGd11x5List(openresultGd11x5);
         ExcelUtil<OpenresultGd11x5> util = new ExcelUtil<OpenresultGd11x5>(OpenresultGd11x5.class);
         util.exportExcel(response, list, "开奖结果(广东11选5)数据");

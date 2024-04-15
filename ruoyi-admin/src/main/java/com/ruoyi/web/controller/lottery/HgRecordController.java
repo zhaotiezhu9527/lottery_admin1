@@ -54,6 +54,7 @@ public class HgRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, HgRecord hgRecord)
     {
+        startOrderBy();
         List<HgRecord> list = hgRecordService.selectHgRecordList(hgRecord);
         ExcelUtil<HgRecord> util = new ExcelUtil<HgRecord>(HgRecord.class);
         util.exportExcel(response, list, "皇冠体育注单数据");

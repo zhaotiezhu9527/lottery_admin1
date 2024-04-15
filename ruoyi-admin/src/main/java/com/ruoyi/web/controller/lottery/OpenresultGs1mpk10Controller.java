@@ -54,6 +54,7 @@ public class OpenresultGs1mpk10Controller extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultGs1mpk10 openresultGs1mpk10)
     {
+        startOrderBy();
         List<OpenresultGs1mpk10> list = openresultGs1mpk10Service.selectOpenresultGs1mpk10List(openresultGs1mpk10);
         ExcelUtil<OpenresultGs1mpk10> util = new ExcelUtil<OpenresultGs1mpk10>(OpenresultGs1mpk10.class);
         util.exportExcel(response, list, "开奖结果(GS1分PK10)数据");

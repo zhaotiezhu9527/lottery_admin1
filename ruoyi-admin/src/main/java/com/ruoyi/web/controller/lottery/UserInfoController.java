@@ -68,6 +68,7 @@ public class UserInfoController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, UserInfo userInfo)
     {
+        startOrderBy();
         List<UserInfo> list = userInfoService.selectUserInfoList(userInfo);
         ExcelUtil<UserInfo> util = new ExcelUtil<UserInfo>(UserInfo.class);
         util.exportExcel(response, list, "会员列表数据");

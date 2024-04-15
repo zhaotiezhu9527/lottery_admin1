@@ -54,6 +54,7 @@ public class TransactionRecordController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, TransactionRecord transactionRecord)
     {
+        startOrderBy();
         List<TransactionRecord> list = transactionRecordService.selectTransactionRecordList(transactionRecord);
         ExcelUtil<TransactionRecord> util = new ExcelUtil<TransactionRecord>(TransactionRecord.class);
         util.exportExcel(response, list, "账变记录数据");

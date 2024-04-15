@@ -54,6 +54,7 @@ public class UserAccountController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, UserAccount userAccount)
     {
+        startOrderBy();
         List<UserAccount> list = userAccountService.selectUserAccountList(userAccount);
         ExcelUtil<UserAccount> util = new ExcelUtil<UserAccount>(UserAccount.class);
         util.exportExcel(response, list, "收款方式数据");

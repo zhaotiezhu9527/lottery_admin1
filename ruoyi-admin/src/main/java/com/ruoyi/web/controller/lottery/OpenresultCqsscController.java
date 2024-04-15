@@ -54,6 +54,7 @@ public class OpenresultCqsscController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultCqssc openresultCqssc)
     {
+        startOrderBy();
         List<OpenresultCqssc> list = openresultCqsscService.selectOpenresultCqsscList(openresultCqssc);
         ExcelUtil<OpenresultCqssc> util = new ExcelUtil<OpenresultCqssc>(OpenresultCqssc.class);
         util.exportExcel(response, list, "开奖结果(重庆时时彩)数据");

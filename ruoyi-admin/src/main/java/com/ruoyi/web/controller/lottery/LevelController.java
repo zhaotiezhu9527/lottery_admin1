@@ -54,6 +54,7 @@ public class LevelController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Level level)
     {
+        startOrderBy();
         List<Level> list = levelService.selectLevelList(level);
         ExcelUtil<Level> util = new ExcelUtil<Level>(Level.class);
         util.exportExcel(response, list, "等级管理数据");

@@ -54,6 +54,7 @@ public class OpenresultGs1mlhcController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultGs1mlhc openresultGs1mlhc)
     {
+        startOrderBy();
         List<OpenresultGs1mlhc> list = openresultGs1mlhcService.selectOpenresultGs1mlhcList(openresultGs1mlhc);
         ExcelUtil<OpenresultGs1mlhc> util = new ExcelUtil<OpenresultGs1mlhc>(OpenresultGs1mlhc.class);
         util.exportExcel(response, list, "1分六合彩开奖数据");

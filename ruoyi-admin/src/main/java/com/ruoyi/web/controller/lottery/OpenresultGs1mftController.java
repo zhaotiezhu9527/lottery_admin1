@@ -54,6 +54,7 @@ public class OpenresultGs1mftController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultGs1mft openresultGs1mft)
     {
+        startOrderBy();
         List<OpenresultGs1mft> list = openresultGs1mftService.selectOpenresultGs1mftList(openresultGs1mft);
         ExcelUtil<OpenresultGs1mft> util = new ExcelUtil<OpenresultGs1mft>(OpenresultGs1mft.class);
         util.exportExcel(response, list, "1分飞艇开奖数据");

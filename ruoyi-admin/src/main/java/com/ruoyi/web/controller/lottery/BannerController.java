@@ -54,6 +54,7 @@ public class BannerController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Banner banner)
     {
+        startOrderBy();
         List<Banner> list = bannerService.selectBannerList(banner);
         ExcelUtil<Banner> util = new ExcelUtil<Banner>(Banner.class);
         util.exportExcel(response, list, "banner管理数据");

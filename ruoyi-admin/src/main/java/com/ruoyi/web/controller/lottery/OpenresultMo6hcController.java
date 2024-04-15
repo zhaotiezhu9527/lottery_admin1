@@ -54,6 +54,7 @@ public class OpenresultMo6hcController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OpenresultMo6hc openresultMo6hc)
     {
+        startOrderBy();
         List<OpenresultMo6hc> list = openresultMo6hcService.selectOpenresultMo6hcList(openresultMo6hc);
         ExcelUtil<OpenresultMo6hc> util = new ExcelUtil<OpenresultMo6hc>(OpenresultMo6hc.class);
         util.exportExcel(response, list, "开奖结果(澳门六合彩)数据");

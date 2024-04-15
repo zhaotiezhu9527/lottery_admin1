@@ -54,6 +54,7 @@ public class PayChannelController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, PayChannel payChannel)
     {
+        startOrderBy();
         List<PayChannel> list = payChannelService.selectPayChannelList(payChannel);
         ExcelUtil<PayChannel> util = new ExcelUtil<PayChannel>(PayChannel.class);
         util.exportExcel(response, list, "渠道管理数据");
