@@ -123,6 +123,13 @@
           <el-button
             size="mini"
             type="text"
+            v-hasPermi="['lottery:lotteryOrder:cancel']"
+            v-if="scope.row.orderStatus === 0"
+            @click="cancelOrder(scope.row)"
+          >撤单</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['lottery:lotteryOrder:remove']"
@@ -144,7 +151,7 @@
 </template>
 
 <script>
-import { listLotteryOrder } from "@/api/lottery/lotteryOrder";
+import { listLotteryOrder,lotteryOrderOrder } from "@/api/lottery/lotteryOrder";
 import { listLottery } from "@/api/lottery/lottery";
 import { dateFormat,pickerOptions } from '@/utils/auth'
 
@@ -170,6 +177,8 @@ export default {
         lotteryCode: "",
         qs: null,
         orderStatus: "",
+        isAsc:'desc',
+        orderByColumn:'id'
       },
       orderList: [
         { label: '全部', value: ''},
@@ -247,6 +256,16 @@ export default {
         this.lotteryList = response.rows;
         this.getList();
       });
+    },
+    /** 删除按钮操作 */
+    cancelOrder(row) {
+      let self = this
+      this.$modal.confirm('是否取消注单？').then(function() {
+        lotteryOrderOrder(row.orderNo).then(response => {
+          self.getList();
+          self.$modal.msgSuccess("操作成功");
+        });
+      })
     },
   }
 };
