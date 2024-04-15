@@ -77,7 +77,7 @@ public class CheckBusinessImpl implements CheckBusiness {
                         .set(StringUtils.isNotEmpty(request.getRemark()), Deposit::getRemark, request.getRemark())
                         .set(Deposit::getStatus, status)
                         .eq(Deposit::getId, deposit.getId())
-                        .set(Deposit::getStatus, 0)
+                        .eq(Deposit::getStatus, 0)
         );
         if (!update) {
             throw new ServiceException("修改订单失败");
@@ -119,7 +119,7 @@ public class CheckBusinessImpl implements CheckBusiness {
                         .set(StringUtils.isNotEmpty(request.getRemark()), Withdraw::getRemark, request.getRemark())
                         .set(Withdraw::getStatus, status)
                         .eq(Withdraw::getId, withdraw.getId())
-                        .set(Withdraw::getStatus, 0)
+                        .eq(Withdraw::getStatus, 0)
         );
         if (!update) {
             throw new ServiceException("修改订单失败");

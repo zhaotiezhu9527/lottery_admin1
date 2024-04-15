@@ -25,29 +25,36 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审核时间" prop="checkTime">
-        <el-date-picker clearable
-          v-model="queryParams.checkTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择审核时间">
-        </el-date-picker>
+      <el-form-item label="提现类型">
+        <el-select v-model="queryParams.accountType" placeholder="请选择">
+          <el-option
+            v-for="item in payList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="操作人" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          placeholder="请输入操作人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态">
+        <el-select v-model="queryParams.status" placeholder="请选择">
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="用户收款信息详情" prop="accountDetail">
-        <el-input
-          v-model="queryParams.accountDetail"
-          placeholder="请输入用户收款信息详情"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="时间" prop="orderTime">
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 340px"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -58,38 +65,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['lottery:withdraw:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:withdraw:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:withdraw:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -98,41 +73,46 @@
           v-hasPermi="['lottery:withdraw:export']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="withdrawList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
+    <el-table v-loading="loading" :data="withdrawList">
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="订单号" align="center" prop="orderNo" />
       <el-table-column label="金额" align="center" prop="amount" />
-      <el-table-column label="审核时间" align="center" prop="checkTime" width="180">
+      <el-table-column label="提现类型" align="center" prop="accountType" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.checkTime, '{y}-{m}-{d}') }}</span>
+          <div v-if="scope.row.accountType === 1">银行卡</div>
+          <div v-else-if="scope.row.accountType === 2">微信</div>
+          <div v-else-if="scope.row.accountType === 3">支付宝</div>
+          <div v-else-if="scope.row.accountType === 4">虚拟货币</div>
         </template>
       </el-table-column>
-      <el-table-column label="0:待审核 1:审核通过 2:拒绝提现" align="center" prop="status" />
+      <el-table-column label="用户收款信息详情" align="center" prop="accountDetail" />
+      <el-table-column label="提现状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-tag type="warning" v-if="scope.row.status === 0">待审核</el-tag>
+          <el-tag type="success" v-else-if="scope.row.status === 1">提现成功</el-tag>
+          <el-tag type="danger" v-else-if="scope.row.status === 2">提现失败</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间" prop="lastTime" width="200">
+        <template slot-scope="scope">
+          <div>申请：{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')  || '-'}}</div>
+          <div>审核：{{ parseTime(scope.row.checkTime, '{y}-{m}-{d} {h}:{i}:{s}')  || '-'}}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作人" align="center" prop="operName" />
-      <el-table-column label="1:银行卡 2:微信 3:支付宝 4:虚拟货币" align="center" prop="accountType" />
-      <el-table-column label="用户收款信息详情" align="center" prop="accountDetail" />
+      
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['lottery:withdraw:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['lottery:withdraw:remove']"
-          >删除</el-button>
+            @click="handleCheck(scope.row.id)"
+            v-hasPermi="['lottery:deposit:check']"
+            v-if="scope.row.status === 0"
+          >审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -145,46 +125,29 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改提现订单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入用户名" />
-        </el-form-item>
-        <el-form-item label="订单号" prop="orderNo">
-          <el-input v-model="form.orderNo" placeholder="请输入订单号" />
-        </el-form-item>
-        <el-form-item label="金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入金额" />
-        </el-form-item>
-        <el-form-item label="审核时间" prop="checkTime">
-          <el-date-picker clearable
-            v-model="form.checkTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择审核时间">
-          </el-date-picker>
+      <!-- 审核 -->
+    <el-dialog title="提交审核" :visible.sync="examineOpen" width="400px" append-to-body>
+      <el-form ref="examineform" :model="examineForm" :rules="rules" label-width="80px">
+        <el-form-item label="审核" prop="status">
+          <el-select v-model="examineForm.status" placeholder="请选择审核状态">
+            <el-option label="通过" :value="1"></el-option>
+            <el-option label="拒绝" :value="2"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="操作人" prop="operName">
-          <el-input v-model="form.operName" placeholder="请输入操作人" />
-        </el-form-item>
-        <el-form-item label="用户收款信息详情" prop="accountDetail">
-          <el-input v-model="form.accountDetail" placeholder="请输入用户收款信息详情" />
+          <el-input v-model="examineForm.remark" placeholder="请输入审核备注描述，没有可不填" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="examineSub">确 定</el-button>
+        <el-button @click="examineOpen = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listWithdraw, getWithdraw, delWithdraw, addWithdraw, updateWithdraw } from "@/api/lottery/withdraw";
+import { listWithdraw,withdrawCheck } from "@/api/lottery/withdraw";
 
 export default {
   name: "Withdraw",
@@ -192,12 +155,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -215,20 +172,38 @@ export default {
         userName: null,
         orderNo: null,
         amount: null,
-        checkTime: null,
-        status: null,
-        operName: null,
-        accountType: null,
-        accountDetail: null
+        status: "",
+        accountType: "",
+        isAsc:'desc',
+        orderByColumn:'id'
       },
-      // 表单参数
-      form: {},
       // 表单校验
       rules: {
-        userName: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+        status: [
+          { required: true, message: "请选择审核状态", trigger: "blur" }
         ],
-      }
+        remark: [
+          { required: true, message: "请输入备注", trigger: "blur" }
+        ],
+      },
+      payList: [
+        { label: '全部', value: ''},
+        { label: '银行卡', value: 1},
+        { label: '微信', value: 2},
+        { label: '支付宝', value: 3},
+        { label: '虚拟货币', value: 4},
+      ],//状态
+      statusList: [
+        { label: '全部', value: ''},
+        { label: '待审核', value: 0},
+        { label: '提现成功', value: 1},
+        { label: '提现失败', value: 2},
+      ],//状态
+      // 时间
+      dateRange:[],
+      listId: "",//操作id
+      examineOpen: false,//审核状态
+      examineForm: {},//审核提交数据
     };
   },
   created() {
@@ -238,34 +213,11 @@ export default {
     /** 查询提现订单列表 */
     getList() {
       this.loading = true;
-      listWithdraw(this.queryParams).then(response => {
+      listWithdraw(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.withdrawList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        userName: null,
-        orderNo: null,
-        amount: null,
-        createTime: null,
-        checkTime: null,
-        status: null,
-        remark: null,
-        operName: null,
-        updateTime: null,
-        accountType: null,
-        accountDetail: null
-      };
-      this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -277,64 +229,30 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加提现订单";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getWithdraw(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改提现订单";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateWithdraw(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addWithdraw(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除提现订单编号为"' + ids + '"的数据项？').then(function() {
-        return delWithdraw(ids);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
     /** 导出按钮操作 */
     handleExport() {
       this.download('lottery/withdraw/export', {
         ...this.queryParams
       }, `withdraw_${new Date().getTime()}.xlsx`)
-    }
+    },
+     // 审核
+     handleCheck(id){
+      this.listId = id
+      this.examineForm.id = id
+      this.examineOpen = true
+    },
+    // 审核提交
+    examineSub(){
+      this.$refs["examineform"].validate(valid => {
+        if (valid) {
+          withdrawCheck(this.examineForm).then(response => {
+            this.$modal.msgSuccess("操作成功");
+            this.examineOpen = false;
+            this.getList();
+          });
+        }
+      });
+    },
   }
 };
 </script>

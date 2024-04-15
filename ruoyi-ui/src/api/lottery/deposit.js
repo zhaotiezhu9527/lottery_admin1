@@ -42,3 +42,12 @@ export function delDeposit(id) {
     method: 'delete'
   })
 }
+
+// 审核
+export function depositCheck(data) {
+  return request({
+    url: '/lottery/deposit/check',
+    method: 'post',
+    data: data
+  })
+}

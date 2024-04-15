@@ -62,4 +62,10 @@ public class Withdraw extends BaseEntity
     @Excel(name = "用户收款信息详情")
     private String accountDetail;
 
+    /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    /** 备注 */
+    private String remark;
 }
