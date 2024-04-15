@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { listOpenresultCqssc, getOpenresultCqssc, delOpenresultCqssc, addOpenresultCqssc, updateOpenresultCqssc } from "@/api/lottery/openresultCqssc";
+import { listOpenresultCqssc, getOpenresultCqssc, delOpenresultCqssc, updateOpenresultCqssc } from "@/api/lottery/openresultCqssc";
 import { dateFormat,pickerOptions } from '@/utils/auth'
 
 export default {
