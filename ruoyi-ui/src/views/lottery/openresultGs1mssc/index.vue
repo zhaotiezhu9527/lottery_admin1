@@ -35,7 +35,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['lottery:openresultCqssc:export']"
+          v-hasPermi="['lottery:openresultGs1mssc:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -73,14 +73,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['lottery:openresultJsk3:edit']"
+            v-hasPermi="['lottery:openresultGs1mssc:edit']"
           >修改</el-button>
           <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['lottery:openresultJsk3:remove']"
+            v-hasPermi="['lottery:openresultGs1mssc:remove']"
           >删除</el-button> -->
         </template>
       </el-table-column>
