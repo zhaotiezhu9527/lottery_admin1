@@ -42,3 +42,12 @@ export function delUserInfo(id) {
     method: 'delete'
   })
 }
+
+// 会员上下分
+export function userInfoOptMoney(data) {
+  return request({
+    url: '/lottery/userInfo/optMoney',
+    method: 'post',
+    data: data
+  })
+}
