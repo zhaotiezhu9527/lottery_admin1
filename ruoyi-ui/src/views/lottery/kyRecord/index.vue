@@ -135,18 +135,8 @@ export default {
       this.form = {
         id: null,
         userName: null,
-        platUserName: null,
         orderNo: null,
-        gameId: null,
         gameName: null,
-        effectiveBet: null,
-        allBet: null,
-        profit: null,
-        gameStartTime: null,
-        gameEndTime: null,
-        settleTime: null,
-        createTime: null,
-        updateTime: null
       };
       this.resetForm("form");
     },
@@ -163,7 +153,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除开元注单编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除注单编号为"' + ids + '"的数据项？').then(function() {
         return delKyRecord(ids);
       }).then(() => {
         this.getList();
