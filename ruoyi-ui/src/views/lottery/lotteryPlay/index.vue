@@ -92,9 +92,9 @@
       <el-table-column label="玩法名称" align="center" prop="playName" />
       <el-table-column label="彩票代码" align="center" prop="lotteryCode" />
       <el-table-column label="盘口代码" align="center" prop="handicapCode" />
-      <el-table-column label="玩法提示" align="center" prop="wfts" />
-      <el-table-column label="中奖说明" align="center" prop="zjsm" />
-      <el-table-column label="范例" align="center" prop="fl" />
+      <el-table-column label="玩法提示" align="center" prop="wfts" show-overflow-tooltip/>
+      <el-table-column label="中奖说明" align="center" prop="zjsm" show-overflow-tooltip/>
+      <el-table-column label="范例" align="center" prop="fl" show-overflow-tooltip/>
       <el-table-column label="排序号" align="center" prop="pxh" />
       <el-table-column label="0:启用 1:停用" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -116,7 +116,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
