@@ -72,6 +72,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     #{username}
                 </foreach>
             </if>
+            <if test="params.orderBy != null and params.orderBy != ''"><!-- 自定义排序 -->
+                order by ${params.orderBy}
+            </if>
         </where>
     </select>
     

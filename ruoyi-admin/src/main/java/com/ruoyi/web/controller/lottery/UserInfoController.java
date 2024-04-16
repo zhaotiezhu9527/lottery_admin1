@@ -76,6 +76,7 @@ public class UserInfoController extends BaseController
         List<String> userNames = keys.stream().map(key -> key.split(":")[3]).collect(Collectors.toList());
         Map<String, Object> params = userInfo.getParams();
         params.put("userNames", userNames);
+        params.put("orderBy", "balance desc");//按余额倒序
         userInfo.setParams(params);
         List<UserInfo> list = userInfoService.selectUserInfoList(userInfo);
         return getDataTable(list);
