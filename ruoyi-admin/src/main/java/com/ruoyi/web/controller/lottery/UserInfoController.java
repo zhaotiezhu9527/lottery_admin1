@@ -67,7 +67,7 @@ public class UserInfoController extends BaseController
     /**
      * 查询在线会员列表列表
      */
-    @PreAuthorize("@ss.hasPermi('lottery:userInfo:list')")
+    @PreAuthorize("@ss.hasPermi('lottery:userInfo:online')")
     @GetMapping("/onlineList")
     public TableDataInfo onlineList(UserInfo userInfo)
     {
@@ -84,7 +84,7 @@ public class UserInfoController extends BaseController
     /**
      * 踢用户下线
      */
-    @PreAuthorize("@ss.hasPermi('lottery:userInfo:list')")
+    @PreAuthorize("@ss.hasPermi('lottery:userInfo:kickOnline')")
     @Log(title = "踢下线", businessType = BusinessType.FORCE)
     @PostMapping("/kickOnline")
     public AjaxResult kickOnline(@RequestBody UserInfo userInfo)
