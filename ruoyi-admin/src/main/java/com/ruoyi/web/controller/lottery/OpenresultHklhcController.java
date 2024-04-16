@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.lottery;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,7 +81,18 @@ public class OpenresultHklhcController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OpenresultHklhc openresultHklhc)
     {
-        return toAjax(openresultHklhcService.insertOpenresultHklhc(openresultHklhc));
+        OpenresultHklhc result = new OpenresultHklhc();
+        result.setQs(openresultHklhc.getQs());
+        result.setPlatQs("");
+        result.setOpenResult("");
+        result.setOpenStatus(1L);
+        result.setCurrCount(1L);
+        result.setOpenTime(openresultHklhc.getOpenTime());
+        result.setCloseTime(openresultHklhc.getCloseTime());
+        result.setOpenResultTime(openresultHklhc.getOpenResultTime());
+        result.setCreateTime(new Date());
+        result.setUpdateTime(new Date());
+        return toAjax(openresultHklhcService.insertOpenresultHklhc(result));
     }
 
     /**
@@ -89,6 +103,8 @@ public class OpenresultHklhcController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OpenresultHklhc openresultHklhc)
     {
+        openresultHklhc.setOpenStatus(StringUtils.isNotEmpty(openresultHklhc.getOpenResult()) ? 0L : 1L);
+        openresultHklhc.setUpdateTime(new Date());
         return toAjax(openresultHklhcService.updateOpenresultHklhc(openresultHklhc));
     }
 
