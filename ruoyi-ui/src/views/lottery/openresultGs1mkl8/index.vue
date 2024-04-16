@@ -95,7 +95,7 @@
     />
 
     <!-- 添加或修改开奖结果(江苏快3)对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="期号" prop="qs">
           <el-input v-model="form.qs" :disabled="true" placeholder="请输入期号" />
