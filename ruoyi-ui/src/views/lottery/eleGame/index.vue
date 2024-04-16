@@ -154,6 +154,8 @@ export default {
         gameName: null,
         status:"",
         platSubCode: '',//子平台code
+        isAsc:'desc',
+        orderByColumn:'id'
       },
       // 表单参数
       form: {},
