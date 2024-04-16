@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="在线会员">
+        <span class="red-text">{{ total }}人</span>
+      </el-form-item>
       <el-form-item label="用户名" prop="userName">
         <el-input
           v-model="queryParams.userName"
@@ -91,6 +94,7 @@ export default {
       queryParams: {
         userName: null,
       },
+      total: 0,//在线会员数量
     };
   },
   created() {
@@ -102,6 +106,7 @@ export default {
       this.loading = true;
       userInfoOnlineList().then(response => {
         this.userList = response.rows;
+        this.total = response.total
         this.loading = false;
       });
     },
