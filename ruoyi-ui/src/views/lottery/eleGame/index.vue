@@ -1,30 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="平台代码" prop="platCode">
-        <el-input
-          v-model="queryParams.platCode"
-          placeholder="请输入平台代码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="子平台代码" prop="platSubCode">
-        <el-input
-          v-model="queryParams.platSubCode"
-          placeholder="请输入子平台代码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="游戏代码" prop="gameCode">
-        <el-input
-          v-model="queryParams.gameCode"
-          placeholder="请输入游戏代码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="游戏名称" prop="gameName">
         <el-input
           v-model="queryParams.gameName"
@@ -33,21 +9,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="游戏图标" prop="img">
-        <el-input
-          v-model="queryParams.img"
-          placeholder="请输入游戏图标"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="平台名称">
+        <el-select v-model="queryParams.platSubCode" placeholder="请选择">
+          <el-option
+            v-for="item in codeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="排序号" prop="pxh">
-        <el-input
-          v-model="queryParams.pxh"
-          placeholder="请输入排序号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态">
+        <el-select v-model="queryParams.status" placeholder="请选择">
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -56,38 +36,6 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['lottery:eleGame:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['lottery:eleGame:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['lottery:eleGame:remove']"
-        >删除</el-button>
-      </el-col>
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -101,15 +49,36 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="eleGameList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="平台代码" align="center" prop="platCode" />
-      <el-table-column label="子平台代码" align="center" prop="platSubCode" />
+    <el-table v-loading="loading" :data="eleGameList">
+      <el-table-column label="平台名称" align="center" prop="platSubCode" >
+        <template slot-scope="scope">
+          <div v-if="scope.row.platSubCode === 'AGFISH'">AG捕鱼</div>
+          <div v-else-if="scope.row.platSubCode === 'KY'">开元棋牌</div>
+          <div v-else-if="scope.row.platSubCode === 'AGELE'">AG电子</div>
+          <div v-else-if="scope.row.platSubCode === 'LY'">乐游棋牌</div>
+          <div v-else-if="scope.row.platSubCode === 'BBINELE'">BBIN电子</div>
+          <div v-else-if="scope.row.platSubCode === 'BBINFISH'">BBIN捕鱼</div>
+        </template>
+      </el-table-column>
       <el-table-column label="游戏代码" align="center" prop="gameCode" />
       <el-table-column label="游戏名称" align="center" prop="gameName" />
-      <el-table-column label="游戏图标" align="center" prop="img" />
-      <el-table-column label="0:启用 1:停用" align="center" prop="status" />
+      <el-table-column label="游戏图标" align="center" prop="img" >
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.img" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="排序号" align="center" prop="pxh" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -142,20 +111,8 @@
     <!-- 添加或修改游戏列表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="平台代码" prop="platCode">
-          <el-input v-model="form.platCode" placeholder="请输入平台代码" />
-        </el-form-item>
-        <el-form-item label="子平台代码" prop="platSubCode">
-          <el-input v-model="form.platSubCode" placeholder="请输入子平台代码" />
-        </el-form-item>
-        <el-form-item label="游戏代码" prop="gameCode">
-          <el-input v-model="form.gameCode" placeholder="请输入游戏代码" />
-        </el-form-item>
         <el-form-item label="游戏名称" prop="gameName">
           <el-input v-model="form.gameName" placeholder="请输入游戏名称" />
-        </el-form-item>
-        <el-form-item label="游戏图标" prop="img">
-          <el-input v-model="form.img" placeholder="请输入游戏图标" />
         </el-form-item>
         <el-form-item label="排序号" prop="pxh">
           <el-input v-model="form.pxh" placeholder="请输入排序号" />
@@ -170,7 +127,7 @@
 </template>
 
 <script>
-import { listEleGame, getEleGame, delEleGame, addEleGame, updateEleGame } from "@/api/lottery/eleGame";
+import { listEleGame, getEleGame, delEleGame, updateEleGame } from "@/api/lottery/eleGame";
 
 export default {
   name: "EleGame",
@@ -180,10 +137,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -197,29 +150,31 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
-        platCode: null,
-        platSubCode: null,
-        gameCode: null,
+        pageSize: 20,
         gameName: null,
-        img: null,
-        status: null,
-        pxh: null
+        status:"",
+        platSubCode: '',//子平台code
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        platCode: [
-          { required: true, message: "平台代码不能为空", trigger: "blur" }
-        ],
-        platSubCode: [
-          { required: true, message: "子平台代码不能为空", trigger: "blur" }
-        ],
-        gameCode: [
-          { required: true, message: "游戏代码不能为空", trigger: "blur" }
-        ],
-      }
+       
+      },
+      statusList: [
+        { label: '全部', value: ''},
+        { label: '启用', value: 0},
+        { label: '停用', value: 1},
+      ],//状态
+      codeList: [
+        { label: '全部', value: ''},
+        { label: 'AG捕鱼', value: 'AGFISH'},
+        { label: '开元棋牌', value: 'KY'},
+        { label: 'AG电子', value: 'AGELE'},
+        { label: '乐游棋牌', value: 'LY'},
+        { label: 'BBIN电子', value: 'BBINELE'},
+        { label: 'BBIN捕鱼', value: 'BBINFISH'},
+      ],//状态
     };
   },
   created() {
@@ -244,15 +199,9 @@ export default {
     reset() {
       this.form = {
         id: null,
-        platCode: null,
-        platSubCode: null,
-        gameCode: null,
         gameName: null,
-        img: null,
-        status: null,
-        createTime: null,
-        updateTime: null,
-        pxh: null
+        status: '',
+        platSubCode: '',
       };
       this.resetForm("form");
     },
@@ -265,12 +214,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -290,17 +233,16 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      let obj = {
+        id: this.form.id,
+        gameName: this.form.gameName,
+        pxh: this.form.pxh,
+      }
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateEleGame(this.form).then(response => {
+            updateEleGame(obj).then(response => {
               this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addEleGame(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });
@@ -323,7 +265,16 @@ export default {
       this.download('lottery/eleGame/export', {
         ...this.queryParams
       }, `eleGame_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 停启用状态
+    changeStatus(id,status){
+      updateEleGame({
+        id:id,
+        status:status,
+      }).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
   }
 };
 </script>
