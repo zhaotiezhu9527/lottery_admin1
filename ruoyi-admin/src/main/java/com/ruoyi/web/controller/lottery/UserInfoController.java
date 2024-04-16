@@ -12,6 +12,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.redisKey.RedisKeyUtil;
 import com.ruoyi.lottery.business.OptMoneyBusiness;
 import com.ruoyi.lottery.domain.UserInfo;
 import com.ruoyi.lottery.pojo.OptUserMoneyDto;
@@ -20,14 +21,14 @@ import com.ruoyi.lottery.service.IUserInfoService;
 import com.sun.jna.platform.win32.Winspool;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 会员列表Controller
@@ -48,6 +49,9 @@ public class UserInfoController extends BaseController
     @Autowired
     private ISysParamService sysParamService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     /**
      * 查询会员列表列表
      */
@@ -58,6 +62,36 @@ public class UserInfoController extends BaseController
         startPage();
         List<UserInfo> list = userInfoService.selectUserInfoList(userInfo);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询在线会员列表列表
+     */
+    @PreAuthorize("@ss.hasPermi('lottery:userInfo:list')")
+    @GetMapping("/onlineList")
+    public TableDataInfo onlineList(UserInfo userInfo)
+    {
+//        startPage();
+        Set<String> keys = redisTemplate.keys(RedisKeyUtil.UserOnlineKey("*"));
+        List<String> userNames = keys.stream().map(key -> key.split(":")[3]).collect(Collectors.toList());
+        Map<String, Object> params = userInfo.getParams();
+        params.put("userNames", userNames);
+        userInfo.setParams(params);
+        List<UserInfo> list = userInfoService.selectUserInfoList(userInfo);
+        return getDataTable(list);
+    }
+
+    /**
+     * 踢用户下线
+     */
+    @PreAuthorize("@ss.hasPermi('lottery:userInfo:list')")
+    @Log(title = "踢下线", businessType = BusinessType.FORCE)
+    @PostMapping("/kickOnline")
+    public AjaxResult kickOnline(@RequestBody UserInfo userInfo)
+    {
+        redisTemplate.delete(RedisKeyUtil.UserTokenKey(userInfo.getUserName()));
+        redisTemplate.delete(RedisKeyUtil.UserOnlineKey(userInfo.getUserName()));
+        return AjaxResult.success();
     }
 
     /**

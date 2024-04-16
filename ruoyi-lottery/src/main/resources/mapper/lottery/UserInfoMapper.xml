@@ -66,6 +66,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 and u.create_time &lt;= #{params.endTime}
             </if>
+            <if test="params.userNames != null and params.userNames.size() > 0">
+             and u.user_name in
+                <foreach item="username" collection="params.userNames" open="(" separator="," close=")">
+                    #{username}
+                </foreach>
+            </if>
         </where>
     </select>
     
