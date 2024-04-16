@@ -68,4 +68,7 @@ public class Withdraw extends BaseEntity
 
     /** 备注 */
     private String remark;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 }
