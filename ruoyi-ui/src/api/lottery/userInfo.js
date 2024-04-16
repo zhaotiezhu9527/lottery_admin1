@@ -51,3 +51,21 @@ export function userInfoOptMoney(data) {
     data: data
   })
 }
+
+// 查询在线会员列表
+export function userInfoOnlineList(query) {
+  return request({
+    url: '/lottery/userInfo/onlineList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 会员踢下线
+export function kickOnline(data) {
+  return request({
+    url: '/lottery/userInfo/kickOnline',
+    method: 'post',
+    data: data
+  })
+}
