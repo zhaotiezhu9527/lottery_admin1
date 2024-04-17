@@ -137,6 +137,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="开赛时间" prop="matchDatetime">
+        <el-date-picker clearable
+          v-model="queryParams.matchDatetime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择开赛时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="下注时比分" prop="score">
+        <el-input
+          v-model="queryParams.score"
+          placeholder="请输入下注时比分"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -224,6 +240,13 @@
       <el-table-column label="返回的原始数据 一般是json" align="center" prop="rawData" />
       <el-table-column label="重新结算信息" align="center" prop="resettlementinfo" />
       <el-table-column label="滚球  0:否 1:是" align="center" prop="isLive" />
+      <el-table-column label="开赛时间" align="center" prop="matchDatetime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.matchDatetime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="下注内容" align="center" prop="betContent" />
+      <el-table-column label="下注时比分" align="center" prop="score" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -325,6 +348,20 @@
         <el-form-item label="滚球  0:否 1:是" prop="isLive">
           <el-input v-model="form.isLive" placeholder="请输入滚球  0:否 1:是" />
         </el-form-item>
+        <el-form-item label="开赛时间" prop="matchDatetime">
+          <el-date-picker clearable
+            v-model="form.matchDatetime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择开赛时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="下注内容">
+          <editor v-model="form.betContent" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="下注时比分" prop="score">
+          <el-input v-model="form.score" placeholder="请输入下注时比分" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -387,6 +424,9 @@ export default {
         rawData: null,
         resettlementinfo: null,
         isLive: null,
+        matchDatetime: null,
+        betContent: null,
+        score: null
       },
       // 表单参数
       form: {},
@@ -448,7 +488,10 @@ export default {
         resettlementinfo: null,
         isLive: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
+        matchDatetime: null,
+        betContent: null,
+        score: null
       };
       this.resetForm("form");
     },

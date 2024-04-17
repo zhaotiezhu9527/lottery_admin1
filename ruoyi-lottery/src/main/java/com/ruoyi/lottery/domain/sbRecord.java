@@ -2,10 +2,10 @@ package com.ruoyi.lottery.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.baomidou.mybatisplus.annotation.TableField;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * 沙巴体育注单对象 t_sb_record
  * 
  * @author hardy
- * @date 2024-04-11
+ * @date 2024-04-17
  */
 @Data
 @TableName(value ="t_sb_record")
@@ -126,5 +126,18 @@ public class sbRecord extends BaseEntity
     /** 滚球  0:否 1:是 */
     @Excel(name = "滚球  0:否 1:是")
     private Long isLive;
+
+    /** 开赛时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开赛时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date matchDatetime;
+
+    /** 下注内容 */
+    @Excel(name = "下注内容")
+    private String betContent;
+
+    /** 下注时比分 */
+    @Excel(name = "下注时比分")
+    private String score;
 
 }

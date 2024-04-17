@@ -32,10 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isLive"    column="is_live"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="matchDatetime"    column="match_datetime"    />
+        <result property="betContent"    column="bet_content"    />
+        <result property="score"    column="score"    />
     </resultMap>
 
     <sql id="selectsbRecordVo">
-        select id, user_name, plat_user_name, order_no, game_name, wtype, rtype, tname_home, tname_away, league, ioratio, effective_bet, all_bet, profit, bet_time, settle_time, settle_status, result_status, result_score, odds_format, parlaynum, parlaysub, raw_data, resettlementinfo, is_live, create_time, update_time from t_sb_record
+        select id, user_name, plat_user_name, order_no, game_name, wtype, rtype, tname_home, tname_away, league, ioratio, effective_bet, all_bet, profit, bet_time, settle_time, settle_status, result_status, result_score, odds_format, parlaynum, parlaysub, raw_data, resettlementinfo, is_live, create_time, update_time, match_datetime, bet_content, score from t_sb_record
     </sql>
 
     <select id="selectsbRecordList" parameterType="sbRecord" resultMap="sbRecordResult">
@@ -65,12 +68,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rawData != null  and rawData != ''"> and raw_data = #{rawData}</if>
             <if test="resettlementinfo != null  and resettlementinfo != ''"> and resettlementinfo = #{resettlementinfo}</if>
             <if test="isLive != null "> and is_live = #{isLive}</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and settle_time &gt;= #{params.beginTime}
-            </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and settle_time &lt;= #{params.endTime}
-            </if>
+            <if test="matchDatetime != null "> and match_datetime = #{matchDatetime}</if>
+            <if test="betContent != null  and betContent != ''"> and bet_content = #{betContent}</if>
+            <if test="score != null  and score != ''"> and score = #{score}</if>
         </where>
     </select>
     
@@ -108,6 +108,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isLive != null">is_live,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="matchDatetime != null">match_datetime,</if>
+            <if test="betContent != null">bet_content,</if>
+            <if test="score != null">score,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">#{userName},</if>
@@ -136,6 +139,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isLive != null">#{isLive},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="matchDatetime != null">#{matchDatetime},</if>
+            <if test="betContent != null">#{betContent},</if>
+            <if test="score != null">#{score},</if>
          </trim>
     </insert>
 
@@ -168,6 +174,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isLive != null">is_live = #{isLive},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="matchDatetime != null">match_datetime = #{matchDatetime},</if>
+            <if test="betContent != null">bet_content = #{betContent},</if>
+            <if test="score != null">score = #{score},</if>
         </trim>
         where id = #{id}
     </update>
