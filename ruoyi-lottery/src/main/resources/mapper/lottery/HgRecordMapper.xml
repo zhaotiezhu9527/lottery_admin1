@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="settleTime"    column="settle_time"    />
         <result property="settleStatus"    column="settle_status"    />
         <result property="resultStatus"    column="result_status"    />
+        <result property="score"    column="score"    />
         <result property="resultScore"    column="result_score"    />
         <result property="oddsFormat"    column="odds_format"    />
         <result property="parlaynum"    column="parlaynum"    />
@@ -35,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectHgRecordVo">
-        select id, user_name, plat_user_name, order_no, game_name, wtype, rtype, order_content, tname_home, tname_away, league, strong, ioratio, effective_bet, all_bet, profit, bet_time, settle_time, settle_status, result_status, result_score, odds_format, parlaynum, parlaysub, raw_data, create_time, update_time from t_hg_record
+        select id, user_name, plat_user_name, order_no, game_name, wtype, rtype, order_content, tname_home, tname_away, league, strong, ioratio, effective_bet, all_bet, profit, bet_time, settle_time, settle_status, result_status, score, result_score, odds_format, parlaynum, parlaysub, raw_data, create_time, update_time from t_hg_record
     </sql>
 
     <select id="selectHgRecordList" parameterType="HgRecord" resultMap="HgRecordResult">
@@ -101,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="settleTime != null">settle_time,</if>
             <if test="settleStatus != null">settle_status,</if>
             <if test="resultStatus != null">result_status,</if>
+            <if test="score != null">score,</if>
             <if test="resultScore != null">result_score,</if>
             <if test="oddsFormat != null">odds_format,</if>
             <if test="parlaynum != null">parlaynum,</if>
@@ -129,6 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="settleTime != null">#{settleTime},</if>
             <if test="settleStatus != null">#{settleStatus},</if>
             <if test="resultStatus != null">#{resultStatus},</if>
+            <if test="score != null">#{score},</if>
             <if test="resultScore != null">#{resultScore},</if>
             <if test="oddsFormat != null">#{oddsFormat},</if>
             <if test="parlaynum != null">#{parlaynum},</if>
@@ -161,6 +164,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="settleTime != null">settle_time = #{settleTime},</if>
             <if test="settleStatus != null">settle_status = #{settleStatus},</if>
             <if test="resultStatus != null">result_status = #{resultStatus},</if>
+            <if test="score != null">score = #{score},</if>
             <if test="resultScore != null">result_score = #{resultScore},</if>
             <if test="oddsFormat != null">odds_format = #{oddsFormat},</if>
             <if test="parlaynum != null">parlaynum = #{parlaynum},</if>

@@ -2,8 +2,12 @@ package com.ruoyi.lottery.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -107,6 +111,12 @@ public class HgRecord extends BaseEntity
     @Excel(name = "0:无结果 L:输 W:赢 P:合 D:取消 A:还原")
     private String resultStatus;
 
+    /**
+     * 下注时比分
+     */
+    @Excel(name = "下注时比分")
+    private String score;
+
     /** 比分结果 */
     @Excel(name = "比分结果")
     private String resultScore;
@@ -122,6 +132,9 @@ public class HgRecord extends BaseEntity
     /** 串数内容 一般是json */
     @Excel(name = "串数内容 一般是json")
     private String parlaysub;
+
+    @TableField(exist = false)
+    private List<JSONObject> parlaysubArr;
 
     /** 返回的原始数据 一般是json */
     @Excel(name = "返回的原始数据 一般是json")
