@@ -1,4 +1,4 @@
-package com.ruoyi.lottery.controller;
+package com.ruoyi.web.controller.lottery;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
