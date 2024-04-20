@@ -31,12 +31,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="parlaynum"    column="parlaynum"    />
         <result property="parlaysub"    column="parlaysub"    />
         <result property="rawData"    column="raw_data"    />
+        <result property="matchDatetime"    column="match_datetime"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectHgRecordVo">
-        select id, user_name, plat_user_name, order_no, game_name, wtype, rtype, order_content, tname_home, tname_away, league, strong, ioratio, effective_bet, all_bet, profit, bet_time, settle_time, settle_status, result_status, score, result_score, odds_format, parlaynum, parlaysub, raw_data, create_time, update_time from t_hg_record
+        select id, user_name, plat_user_name, order_no, game_name, wtype, rtype, order_content, tname_home, tname_away, league, strong, ioratio, effective_bet, all_bet, profit, bet_time, settle_time, settle_status, result_status, score, result_score, odds_format, parlaynum, parlaysub, raw_data, match_datetime, create_time, update_time from t_hg_record
     </sql>
 
     <select id="selectHgRecordList" parameterType="HgRecord" resultMap="HgRecordResult">
@@ -108,6 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parlaynum != null">parlaynum,</if>
             <if test="parlaysub != null">parlaysub,</if>
             <if test="rawData != null">raw_data,</if>
+            <if test="matchDatetime != null">match_datetime,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
          </trim>
@@ -137,6 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parlaynum != null">#{parlaynum},</if>
             <if test="parlaysub != null">#{parlaysub},</if>
             <if test="rawData != null">#{rawData},</if>
+            <if test="matchDatetime != null">#{matchDatetime},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
          </trim>
@@ -170,6 +173,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parlaynum != null">parlaynum = #{parlaynum},</if>
             <if test="parlaysub != null">parlaysub = #{parlaysub},</if>
             <if test="rawData != null">raw_data = #{rawData},</if>
+            <if test="matchDatetime != null">match_datetime = #{matchDatetime},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
