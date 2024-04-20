@@ -2,6 +2,8 @@ package com.ruoyi.lottery.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.alibaba.fastjson2.JSONArray;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -139,5 +141,8 @@ public class sbRecord extends BaseEntity
     /** 下注时比分 */
     @Excel(name = "下注时比分")
     private String score;
+
+    @TableField(exist = false)
+    private JSONArray parlaysubArr = new JSONArray();
 
 }

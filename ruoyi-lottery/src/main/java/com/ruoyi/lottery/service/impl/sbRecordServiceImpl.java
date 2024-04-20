@@ -1,7 +1,11 @@
 package com.ruoyi.lottery.service.impl;
 
 import java.util.List;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.lottery.mapper.sbRecordMapper;
@@ -42,7 +46,16 @@ public class sbRecordServiceImpl extends ServiceImpl<sbRecordMapper, sbRecord> i
     @Override
     public List<sbRecord> selectsbRecordList(sbRecord sbRecord)
     {
-        return sbRecordMapper.selectsbRecordList(sbRecord);
+        List<sbRecord> list = sbRecordMapper.selectsbRecordList(sbRecord);
+        for (sbRecord record : list) {
+            record.setParlaynum(0L);
+            if (StringUtils.isNotBlank(record.getParlaysub())) {
+                JSONArray array = JSON.parseArray(record.getParlaysub());
+                record.setParlaysubArr(array);
+                record.setParlaynum(Long.valueOf(array.size()));
+            }
+        }
+        return list;
     }
 
     /**
